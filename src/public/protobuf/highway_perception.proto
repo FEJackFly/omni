@@ -1,0 +1,70 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "geometry.proto";
+
+message Object {
+    int32 id = 1;
+    int32 age = 2;
+    int32 perception_age = 3;
+
+    Point3D reference_point = 4;
+    repeated Point3D reference_points = 5;
+    Point3D bounding_box_center = 6;
+    Point3D bounding_box_size = 7;
+    Point3D object_box_center = 8;
+    Point3D object_box_size = 9;
+
+    float object_box_orientation = 10;
+    float object_box_orientation_absolute = 11;
+
+    Point3D absolute_velocity = 12;
+    Point3D absolute_velocity_sigma = 13;
+    Point3D relative_velocity = 14;
+
+    Point3D absolute_acceleration = 15;
+    Point3D relative_acceleration = 16;
+
+    Point3D absolute_yaw_rate = 17;
+    Point3D relative_yaw_rate = 18;
+
+    int32 classification = 19;
+    int32 classification_age = 20;
+
+    float confidence = 21;
+
+    repeated Point3D contour_points = 22;
+    repeated Point3D contour_points_absolute = 23;
+}
+
+message Objects {
+    Header header = 1;
+
+    uint64 second = 2;
+    uint64 fra_second = 3;
+    repeated Object objects = 4;
+    string camera_side = 5;
+}
+
+message OgmPoint {
+    enum Type {
+        UNCLASSIFIED = 0;
+        UNKNOWN_SMALL = 1;
+        UNKNOWN_BIG = 2;
+        PEDESTRIAN = 3;
+        BIKE = 4;
+        CAR = 5;
+        TRUCK = 6;
+    }
+    float x = 1;
+    float y = 2;
+    float z = 3;
+    float p = 4;
+    uint32 type = 5;
+}
+
+message OgmPoints {
+    Header header = 1;
+
+    repeated OgmPoint points = 2;
+}

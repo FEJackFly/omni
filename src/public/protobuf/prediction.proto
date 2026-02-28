@@ -1,0 +1,25 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "google/protobuf/timestamp.proto";
+
+message PredictionTrajectory {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double s = 4;      // accumulated distance from beginning of the path in [m]
+  double theta = 5;  // direction on the x-y plane in [0~2pi]
+  double kappa = 6;  // curvature on the x-y planning
+  double v = 7;      // linear velocity in [m/s]
+  double a = 8;      // linear acceleration in [m/s^2]
+  double relative_time = 9;  // relative time from beginning of the trajectory in [s]
+}
+
+message PredictionObject {
+  repeated PredictionTrajectory trajectories = 1;
+} 
+
+message PredictionCmd {
+  google.protobuf.Timestamp timestamp = 1;
+  repeated PredictionObject prediction_objects = 2;
+}

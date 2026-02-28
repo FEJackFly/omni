@@ -1,0 +1,22 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+message VehicleAlarm {
+  uint32 vehicle_id = 1;                  // 车辆id
+  uint32 vehicle_fault_reset = 2;         // 车辆反馈reset
+  repeated uint32 active_alarm_ids = 3;   // 车辆alarm, 统计 vehicle_alarm_state 为 Active 的所有 vehicle_alarm_identifier
+
+  uint32 vehicle_power_mode = 4;            // 电源模式
+  uint32 vehicle_alert_mode = 5;            // 警报模式
+  uint32 vehicle_current_control_mode = 6;  // 当前控制模式
+
+  uint32 coning_completed_signal = 7;       // coning 完成信号
+
+  uint32 vehicle_major_version = 8;         // 主版本号
+  uint32 vehicle_minor_version = 9;         // 次版本号
+
+  float maximum_driving_speed = 10;         // 最大行驶速度
+  float maximum_driving_motor_torque = 11;  // 最大驱动电机扭矩
+  float maximum_total_mechanical_brake_torque = 12; // 最大机械制动扭矩
+  float max_allowable_regenerative_braking_torque = 13; // 最大允许再生制动扭矩
+}

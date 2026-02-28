@@ -1,0 +1,126 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+import "geometry.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message PathPoint {
+  // vehicle coordinates
+  Point4D vehicle4d = 1;
+  // utm coordinates
+  Point4D utm4d = 2;
+  // curvature on the x-y planning
+  double kappa = 3;
+  // derivative of kappa w.r.t s.
+  double dkappa = 4;
+  // derivative of derivative of kappa w.r.t s.
+  double ddkappa = 5;
+  // accumulated distance from beginning of the path
+  double s = 6;
+  // angle between head truck and trailer, deg [0 ~ 2π]
+  double trailer_angle = 7;
+  // map speed limit, m/s
+  double map_limit_speed = 8;
+  // road slope, deg
+  double slope = 9;
+  // type
+  int32 type = 10;
+  // angle between head truck and trailer, deg [0 ~ 2π]
+  double utm_trailer_angle = 11;
+}
+
+message TrajectoryPoint {
+  // path point
+  PathPoint path_point = 1;
+  // relative time from beginning of the trajectory
+  double relative_time = 2;
+  // linear velocity in m/s
+  double v = 3;
+  // linear acceleration
+  double a = 4;
+  // longitudinal jerk
+  double da = 5;
+  // upper speed limit
+  double max_vel = 6;
+}
+
+enum PlanningStates {
+  PARK = 0;
+  FOLLOW = 1;
+  BRAKE = 2;
+  ESTOP = 3;
+};
+
+enum TurnSignal {
+  NO_TURN = 0;
+  LEFT_TURN = 1;
+  RIGHT_TURN = 2;
+};
+
+message PlanningCmd {
+  // planned trajectory
+  repeated TrajectoryPoint trajectory_point = 1;
+  // backing flag
+  bool backing_flag = 2;
+  // current speed planned target speed, m/s
+  double rt_speed = 3;
+  // aligning distance from target line, m
+  double longitude_dist = 4;
+  // planning state
+  PlanningStates planning_state = 5;
+  // turn light signal
+  TurnSignal turn_signal = 6;
+  // target follow speed in [m/s]
+  double final_speed = 7;
+  // target follow distance in [m]
+  double final_distance = 8;
+  // time stamp
+  google.protobuf.Timestamp time_stamp = 9;
+  // 最近虚拟墙距离
+  double obstacle_distance = 10;
+}
+
+// 状态-空闲
+// uint32 STATUS_IDLE              = 0
+// 状态-行驶中
+// uint32 STATUS_RUNNING           = 1
+// 状态-故障
+// uint32 STATUS_INPUT_ERROR_STOP  = 2
+// 状态-缓停点停车
+// uint32 STATUS_SLOW_STOP         = 3
+// 状态-急停点停车
+// uint32 STATUS_EMER_STOP         = 4
+// 状态-目标终点停车
+// uint32 STATUS_ARRIVED           = 5
+// 状态-感知停障
+// uint32 STATUS_OBSTACLE_STOP     = 6
+
+// 错误-底盘消息丢失（设备CAN故障）
+// uint32 ERROR_CHASSIS_LOST      = 11217
+// 错误-底盘故障
+// uint32 ERROR_CHASSIS           = 11218
+// 错误-非自动驾驶
+// uint32 ERROR_AUTONOMOUS_FLAG   = 11310
+// 错误-手拨ESTOP
+// uint32 ERROR_ESTOP_FLAG        = 11220
+// 错误-地图消息丢失
+// uint32 ERROR_MAP_LOST          = 11303
+// 错误-感知消息丢失
+// uint32 ERROR_PERCEPTION_LOST   = 11301
+// 错误-行车偏离路径
+// uint32 ERROR_DEVIATE_PATH      = 22103
+// 错误-定位消息丢失
+// uint32 ERROR_LOC_LOST          = 11302
+// 错误-融合定位状态异常
+// uint32 ERROR_FUSION_LOC        = 11304
+
+message PncHeartBeat {
+  uint32 status = 1;             // 行驶状态
+  repeated uint32 err_codes = 2; // 错误码
+}
+
+service PlanningCmdService {
+  rpc getPlanningCmd(google.protobuf.Empty) returns (PlanningCmd) {}
+  rpc getPncHeartBeat(google.protobuf.Empty) returns (PncHeartBeat) {}
+}

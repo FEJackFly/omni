@@ -1,0 +1,124 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "geometry.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message MapReply {
+  enum Status {
+    EXECUTING = 0;  // 执行中
+    DONE = 1;       // 已完毕
+    ERROR = 2;      // 错误
+  }
+  enum Error {
+    NA = 0;            // 没有错误
+    UNACHIEVABLE = 1;  // 终点不可达
+    INVALIDSRC = 2;    // 起点不在地图内
+    INVALIDDEST = 3;   // 终点不在地图内
+  }
+  Status status = 1;
+  Error error = 2;
+}
+
+message Position {
+  Point3D point = 1;
+  sint32 forward = 2;
+  sint32 backward = 3;
+}
+
+message CenterPoint {
+  Point4D point = 1;
+  double kappa = 2;
+  double speed_limit = 3;
+  double len_integral = 4;
+}
+
+message BorderPoint {
+  Point2D point = 1;
+}
+
+message Destination {
+  sint32 task_id = 1;
+  Point3D start_point = 2;
+  Point3D end_point = 3;
+}
+
+message Lane {
+  repeated CenterPoint center_line_point = 1;
+  repeated Point2D left_boundary_point = 2;
+  repeated Point2D right_boundary_point = 3;
+  int32 id = 4;
+  int32 type = 5;
+  int32 turn_type = 6;
+}
+
+message Section {
+  int32 id = 1;
+  repeated Lane lanes = 2;
+  repeated int32 predecessors = 3;
+  repeated int32 successors = 4;
+  int32 type = 5;
+  repeated double stop_distances = 6;
+}
+
+message LocalMap {
+  repeated Section sections = 1;
+  string navi_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+}
+
+message Region {
+  int32 type = 1;
+  int32 turn_type = 2;
+  string name = 3;
+}
+
+message TargetLanes {
+  google.protobuf.Timestamp timestamp = 1;
+  sint32 task_id = 2;
+  repeated Lane lane = 3;
+  repeated string target_lane_id = 4;
+}
+
+message HDMapHeartBeat {
+  enum Status {
+    ROUTING_DEFAULT = 0;  // 规划状态-默认
+    ROUTING_SUCCESS = 1;  // 规划状态-成功
+    ROUTING_FAILED = 2;   // 规划状态-失败
+  }
+  int32 id = 1;
+  string navi_id = 2;
+  Status status = 3;
+}
+
+message TrafficSign {
+  enum Type {
+    STRAIGHT = 0;
+    UTURN = 1;
+    CROSS = 2;
+  }
+  google.protobuf.Timestamp timestamp = 1;
+  double speed_limit = 2;
+  Type type = 3;
+  bool detect_tail = 4;
+  double next_speed_limit = 5;
+  double dist_to_sign = 6;
+}
+
+service HDMapService {
+  rpc set_target(Destination) returns (MapReply) {}
+  rpc set_start_point(Point3D) returns (MapReply) {}
+  rpc set_end_point(Point3D) returns (MapReply) {}
+  rpc clear_points(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc get_local_map(Position) returns (LocalMap) {}
+  rpc get_current_region(Point3D) returns (Region) {}
+  rpc get_planning_lanes(google.protobuf.Empty) returns (TargetLanes) {}
+  rpc done_target(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc get_heartbeat(google.protobuf.Empty) returns (HDMapHeartBeat) {}
+  rpc get_traffic_sign(google.protobuf.Empty) returns (TrafficSign) {}
+}
+
+// protoc -I=. --cpp_out=. hdmap.proto
+// protoc --grpc_out=. --plugin=protoc-gen-grpc=`which grpc_cpp_plugin` hdmap.proto
+

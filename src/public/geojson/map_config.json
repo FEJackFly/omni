@@ -1,0 +1,330 @@
+[
+    {
+        "name": "tj_c_gps",
+        "path": "port/tianjin/tj_c/v_5.7.7/"
+    },
+    {
+        "name": "ejn_ck_gps",
+        "path": "port/ceke/ejn_ck/v_2.3/"
+    },
+    {
+        "name": "hf_gps",
+        "path": "port/hefei/hf/v_1.8.1/"
+    },
+    {
+        "name": "hz_gps",
+        "path": "port/huizhou/hz/v_2.7.1/"
+    },
+    {
+        "name": "jh_rc_gps",
+        "path": "highway/shanghai/jh_rc/v_1.2/"
+    },
+    {
+        "name": "shanghai_jiangsu_gps",
+        "path": "highway/shanghai/shanghai_jiangsu/v_1.0.2/"
+    },
+    {
+        "name": "all_gps",
+        "path": "highway/tile/all/v_1.3.66/"
+    },
+    {
+        "name": "cicv_gps",
+        "path": "highway/zhengzhou/cicv/v_1.0.11/"
+    },
+    {
+        "name": "tj_wz_gps",
+        "path": "port/tianjin/tj_wz/v_1.0.11/"
+    },
+    {
+        "name": "sz_gps",
+        "path": "highway/tile/sz/v_1.1.9/"
+    },
+    {
+        "name": "rw_gps",
+        "path": "highway/tile/rw/v_1.0.3/"
+    },
+    {
+        "name": "cs_gps",
+        "path": "highway/tile/cs/v_1.0.2/"
+    },
+    {
+        "name": "tj_oy_gps",
+        "path": "port/tianjin/tj_oy/v_3.1.3/"
+    },
+    {
+        "name": "tj_tpy_gps",
+        "path": "port/tianjin/tj_tpy/v_1.0.6/"
+    },
+    {
+        "name": "yt_gps",
+        "path": "port/shandong/yt/v_1.13.21/"
+    },
+    {
+        "name": "tz_gps",
+        "path": "highway/tile/tz/v_1.0.2/"
+    },
+    {
+        "name": "yt_demo_gps",
+        "path": "port/shandong/yt_demo/v_1.8.4/"
+    },
+    {
+        "name": "eeds_gps",
+        "path": "highway/neimenggu/eeds/v_2.4/"
+    },
+    {
+        "name": "sy_gps",
+        "path": "highway/tile/sy/v_1.1.5/"
+    },
+    {
+        "name": "sa_gps",
+        "path": "highway/tile/sa/v_1.1.4/"
+    },
+    {
+        "name": "ordos_gps",
+        "path": "highway/neimenggu/ordos/v_3.7/"
+    },
+    {
+        "name": "xg_gps",
+        "path": "port/xuzhou/xg/v_1.0.0/"
+    },
+    {
+        "name": "xuzhou_gps",
+        "path": "port/jiangsu/xuzhou/v_1.0.2/"
+    },
+    {
+        "name": "tj_dj_gps",
+        "path": "port/tianjin/tj_dj/v_1.0.28/"
+    },
+    {
+        "name": "caiyu-majuqiao_gps",
+        "path": "highway/beijing/caiyu-majuqiao/v_1.1.23/"
+    },
+    {
+        "name": "yl_gps",
+        "path": "highway/tile/yl/v_1.3.0/"
+    },
+    {
+        "name": "shahe_gps",
+        "path": "highway/beijing/shahe/v_1.1.6/"
+    },
+    {
+        "name": "tj_oy_infra_gps",
+        "path": "port/tianjin/tj_oy_infra/v_1.2.18/"
+    },
+    {
+        "name": "shunyi_gps",
+        "path": "highway/beijing/shunyi/v_1.0.5/"
+    },
+    {
+        "name": "yi_gps",
+        "path": "highway/tile/yi/v_1.2.1/"
+    },
+    {
+        "name": "xq_gps",
+        "path": "highway/tile/xq/v_1.0.10/"
+    },
+    {
+        "name": "lugezhuang-xuejiazhuang_gps",
+        "path": "highway/beijing/lugezhuang-xuejiazhuang/v_1.0.2/"
+    },
+    {
+        "name": "haiguan-zhakou_gps",
+        "path": "port/tianjin/haiguan-zhakou/v_1.0.0/"
+    },
+    {
+        "name": "sd_gps",
+        "path": "highway/tile/sd/v_1.0.7/"
+    },
+    {
+        "name": "bb_gps",
+        "path": "port/baotou/bb/v_1.2.1/"
+    },
+    {
+        "name": "xa_gps",
+        "path": "highway/tile/xa/v_1.0.2/"
+    },
+    {
+        "name": "jjt_gps",
+        "path": "highway/tile/jjt/v_1.0.4/"
+    },
+    {
+        "name": "gt_gps",
+        "path": "port/yancheng/gt/v_1.0.5.2/"
+    },
+    {
+        "name": "sd_infra_gps",
+        "path": "highway/tile/sd_infra/v_1.0.0/"
+    },
+    {
+        "name": "hf_test_gps",
+        "path": "port/hefei/hf_test/v_1.0.0/"
+    },
+    {
+        "name": "tz_2021_gps",
+        "path": "port/beijing/tz_2021/v_1.0.3/"
+    },
+    {
+        "name": "cs_2024_gps",
+        "path": "highway/tile/cs_2024/v_1.0.25/"
+    },
+    {
+        "name": "bt_gps",
+        "path": "port/baotou/bt/v_1.0.0/"
+    },
+    {
+        "name": "sjz_gps",
+        "path": "highway/tile/sjz/v_1.0.5/"
+    },
+    {
+        "name": "qd_qqctu_infra_gps",
+        "path": "port/shandong/qd_qqctu_infra/v_1.0.13/"
+    },
+    {
+        "name": "qd_qqctu_gps",
+        "path": "port/shandong/qd_qqctu/v_1.0.3/"
+    },
+    {
+        "name": "xxl_npe_infra_gps",
+        "path": "port/xinxilan/xxl_npe_infra/v_1.0.7/"
+    },
+    {
+        "name": "bc_gps",
+        "path": "highway/tile/bc/v_1.0.0/"
+    },
+    {
+        "name": "sfq_gps",
+        "path": "highway/tile/sfq/v_1.0.0/"
+    },
+    {
+        "name": "ns_gps",
+        "path": "port/guangzhou/ns/v_1.0.0/"
+    },
+    {
+        "name": "bj_sy_gps",
+        "path": "port/beijing/bj_sy/v_1.0.0/"
+    },
+    {
+        "name": "chengde_gps",
+        "path": "highway/tile/chengde/v_1.0.0/"
+    },
+    {
+        "name": "jingcheng_gps",
+        "path": "highway/tile/jingcheng/v_1.0.3/"
+    },
+    {
+        "name": "ad-wsz_gps",
+        "path": "highway/beijing/ad-wsz/v_1.0.1/"
+    },
+    {
+        "name": "cs_jy_gps",
+        "path": "highway/tile/cs_jy/v_1.0.0/"
+    },
+    {
+        "name": "bh_tyzy_gps",
+        "path": "port/beihai/bh_tyzy/v_1.0.1/"
+    },
+    {
+        "name": "nb_yz_incremental_gps",
+        "path": "port/ningbo/nb_yz_incremental/v_7.3.3/"
+    },
+    {
+        "name": "ks_gps",
+        "path": "highway/tile/ks/v_1.0.5/"
+    },
+    {
+        "name": "gz_ns_test_gps",
+        "path": "port/guangzhou/gz_ns_test/v_1.0.4/"
+    },
+    {
+        "name": "gz_ns_infra_gps",
+        "path": "port/guangzhou/gz_ns_infra/v_1.0.17/"
+    },
+    {
+        "name": "zh_sy_gps",
+        "path": "port/zhuhai/zh_sy/v_1.0.6/"
+    },
+    {
+        "name": "cz_pz_gps",
+        "path": "port/chongzuo/cz_pz/v_1.0.14/"
+    },
+    {
+        "name": "xx_gps",
+        "path": "highway/tile/xx/v_1.0.1/"
+    },
+    {
+        "name": "lg_gps",
+        "path": "port/zhengzhou/lg/v_1.0.36/"
+    },
+    {
+        "name": "lq_gps",
+        "path": "port/chongzuo/lq/v_1.0.1/"
+    },
+    {
+        "name": "yt_sh_gps",
+        "path": "port/shandong/yt_sh/v_2.0.5/"
+    },
+    {
+        "name": "dg_infra_gps",
+        "path": "port/dongguan/dg_infra/v_1.0.2/"
+    },
+    {
+        "name": "zqy_kg_gps",
+        "path": "highway/beijing/zqy_kg/v_1.0.4/"
+    },
+    {
+        "name": "ds_test_gps",
+        "path": "port/singapore/ds_test/v_1.0.5/"
+    },
+    {
+        "name": "ds_infra_gps",
+        "path": "port/singapore/ds_infra/v_1.0.7/"
+    },
+    {
+        "name": "tunnle_single_gps",
+        "path": "port/ningbo/tunnle_single/v_1.0.0/"
+    },
+    {
+        "name": "gz_ns_gps",
+        "path": "port/guangzhou/gz_ns/v_2.0.2/"
+    },
+    {
+        "name": "caiyu_majuqiao_gps",
+        "path": "highway/beijing/caiyu_majuqiao/v_1.1.24/"
+    },
+    {
+        "name": "tj_dj2_infra_gps",
+        "path": "port/tianjin/tj_dj2_infra/v_1.0.10/"
+    },
+    {
+        "name": "bm_ms_gps",
+        "path": "highway/beijing/bm_ms/v_1.0.0/"
+    },
+    {
+        "name": "yn_km_gps",
+        "path": "port/yunnan/yn_km/v_1.0.2/"
+    },
+    {
+        "name": "qd_xs_gps",
+        "path": "port/shandong/qd_xs/v_1.3.0/"
+    },
+    {
+        "name": "dpw_gps",
+        "path": "port/australia/dpw/v_1.0.0/"
+    },
+    {
+        "name": "dpw_infra_gps",
+        "path": "port/australia/dpw_infra/v_1.0.6/"
+    },
+    {
+        "name": "tj_ja_gps",
+        "path": "port/tianjin/tj_ja/v_1.0.5/"
+    },
+    {
+        "name": "psa_gps",
+        "path": "port/singapore/psa/v_2.0.0/"
+    },
+    {
+        "name": "szs_gps",
+        "path": "highway/tile/szs/v_1.0.2/"
+    }
+]

@@ -1,0 +1,8 @@
+syntax = "proto3";
+package trunk.proto.fit;
+
+message SpeedTable {
+  repeated double rt_speed_list = 1;      // 期望数据列表, 低频
+  repeated double current_speed_list = 2; // 当前速度列表, 低频
+  repeated string time_axis = 3;          // 时间轴, 低频
+}

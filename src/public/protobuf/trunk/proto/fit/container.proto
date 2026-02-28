@@ -1,0 +1,12 @@
+syntax = "proto3";
+package trunk.proto.fit;
+
+import "trunk/proto/fit/enums.proto";
+
+message Container {
+  string id = 1;             // 箱号
+  uint32 size = 2;           // 箱型
+  uint32 weight = 3;         // 箱重,单位:kg
+  ContainerPos position = 4; // 箱在车上的位置,前中后
+  string slot = 5;           // 箱子在船上的位置
+}
