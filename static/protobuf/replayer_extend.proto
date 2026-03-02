@@ -1,0 +1,54 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+import "frame.proto";
+import "geometry.proto";
+import "google/protobuf/timestamp.proto";
+
+message AEB {
+  message TrajectoryPoint {
+    Point3D position = 1;
+    double utm_theta = 2;
+    double utm_trailer_theta = 3;
+  }
+  // AEB collision ogm point
+  Point3D collision_point = 1;
+  // AEB trajectory
+  repeated TrajectoryPoint trajectories = 2;
+}
+
+message Camera {
+  message image {
+    string topic = 1;
+    bytes url = 2;
+  }
+  repeated image images = 1;
+}
+
+message Lidar {
+  google.protobuf.Timestamp timestamp = 1;
+  repeated double msg = 2;
+  string topic = 3;
+  Transform tf = 4;
+}
+
+message FusionDetection {
+  message OgmPoint {
+    uint32 type = 1; // 点云类型 0: 未分类 1: unknown_small 2: unknown_big 3:
+                     // 行人 4: 自行车 5: 小汽车 6: 卡车
+    Point3D point = 2; // 点云数据
+  }
+  repeated OgmPoint ogm = 2; // 环境点云
+}
+
+message Replayer {
+  AEB aeb = 1;         // aeb消息
+  Camera camera = 2;   //视频消息
+  repeated Lidar lidar = 3;     //雷达消息
+  FusionDetection fusionDetection = 4; //感知输出结果
+  string debug_figure = 5; //debug自定义图层
+}
+message ReplayExtend {
+  Frame frame = 1;
+  Replayer replayer = 2; // replayer消息
+}

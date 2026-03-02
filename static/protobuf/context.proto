@@ -1,0 +1,127 @@
+syntax = "proto3";
+option cc_generic_services = true;
+package trunk.msgs;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "geometry.proto";
+import "hdmap.proto";
+import "perception.proto";
+// import "localization.proto";
+import "planning.proto";
+import "control.proto";
+import "chassis.proto";
+
+enum State
+{
+    ERROR = 0;
+    IDEL = 1;
+    READY = 2;
+    RUNNING = 3;
+    ADJUSTING = 4;
+    ARRIVED = 5;
+    STOP = 6;
+    NUM_STATES = 7;
+};
+
+message Agent {
+    State state = 1;
+    double yaw = 2;
+    Pose pose = 3;
+    Twist velocity = 4;
+    Chassis chassis = 5;
+    PlanningCmd planning_cmd = 6;
+    ControlCmd control_cmd = 7;
+    TargetLanes target_lanes = 8;
+}
+
+message Environ {
+    LocalMap map = 1;
+    StaticObstacle emergence_obstacle = 2;
+    StaticObstacles static_obstacles = 3;
+    DynamicObstacles dynamic_obstacles = 4;
+}
+
+message Context {
+    google.protobuf.Timestamp timestamp = 1; 
+    Agent agent = 2;
+    Environ environ = 3;
+}
+
+message ContextSeries {
+    repeated Context context = 1;
+}
+
+message RecordRequest {
+    google.protobuf.Duration forward = 1;
+    google.protobuf.Duration backward = 2;
+}
+
+message AebRequest {
+    bool is_aeb = 1;
+}
+
+message EmptyRequest {
+}
+
+message StateRequest {
+    State state = 1;
+}
+
+message StateResponse {
+    State state = 1;
+}
+
+message TargetRequest {
+    Point2D position = 1;
+}
+
+message TargetResponse {
+}
+
+service ContextService {
+    rpc get_planning_lanes(google.protobuf.Empty) returns (TargetLanes);
+    rpc record(RecordRequest) returns (google.protobuf.Empty);
+    rpc get_context_series(google.protobuf.Empty) returns (ContextSeries);
+    rpc get_context(google.protobuf.Empty) returns (Context);
+    rpc set_agent(Agent) returns (google.protobuf.Empty);
+    rpc get_agent(google.protobuf.Empty) returns (Agent);
+    rpc set_environ(Environ) returns (google.protobuf.Empty);
+    rpc get_environ(google.protobuf.Empty) returns (Environ);
+    rpc set_pose(Pose) returns(google.protobuf.Empty);
+    rpc set_pose_interactively(Pose) returns(google.protobuf.Empty);
+    rpc get_pose(google.protobuf.Empty) returns (Pose);
+    rpc set_velocity(Twist) returns(google.protobuf.Empty);
+    rpc get_velocity(google.protobuf.Empty) returns (Twist);
+    rpc set_chassis(Chassis) returns(google.protobuf.Empty);
+    rpc get_chassis(google.protobuf.Empty) returns (Chassis);
+    rpc set_planning_cmd(PlanningCmd) returns(google.protobuf.Empty);
+    rpc get_planning_cmd(google.protobuf.Empty) returns(PlanningCmd);
+    rpc set_control_cmd(ControlCmd) returns (google.protobuf.Empty);
+    rpc get_control_cmd(google.protobuf.Empty) returns (ControlCmd);
+    rpc set_local_map(LocalMap) returns (google.protobuf.Empty);
+    rpc get_local_map(google.protobuf.Empty) returns (LocalMap);
+    rpc set_emergence_obstacle(StaticObstacle) returns (google.protobuf.Empty);
+    rpc get_emergence_obstacle(google.protobuf.Empty) returns (StaticObstacle);
+    rpc set_static_obstacles(StaticObstacles) returns (google.protobuf.Empty);
+    rpc get_static_obstacles(google.protobuf.Empty) returns (StaticObstacles);
+    rpc set_dynamic_obstacles(DynamicObstacles) returns (google.protobuf.Empty);
+    rpc get_dynamic_obstacles(google.protobuf.Empty) returns (DynamicObstacles);
+    rpc set_aeb(AebRequest) returns (google.protobuf.Empty);
+    rpc get_aeb(google.protobuf.Empty) returns (AebRequest);
+
+    // state machine api
+    rpc set_target    (TargetRequest) returns (TargetResponse);
+    rpc current_state (EmptyRequest) returns                  (StateResponse);                           
+    rpc ready         (StateRequest /* IDEL */) returns       (StateResponse /* READY */);            
+    rpc run           (StateRequest /* READY */) returns      (StateResponse /* RUNNING */);          
+    rpc arrive        (StateRequest /* RUNNING */) returns    (StateResponse /* ARRIVED */);     
+    rpc adjust        (StateRequest /* ARRIVED */) returns    (StateResponse /* ADJUSTING */);   
+    rpc stop          (StateRequest /* RUNNING */) returns    (StateResponse /* STOP */);          
+    rpc resume        (StateRequest /* STOP */) returns       (StateResponse /* RUNNING */);        
+    rpc guide         (StateRequest /* RUNNING */) returns    (StateResponse /* ADJUSTING */);    
+    rpc complete      (StateRequest /* ADJUSTING */) returns  (StateResponse /* ARRIVED */); 
+    rpc reset         (StateRequest /* any status */) returns (StateResponse /* IDEL */);      
+    rpc fail          (StateRequest /* any status */) returns (StateResponse /* ERROR */);    
+}

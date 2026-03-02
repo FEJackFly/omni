@@ -1,0 +1,21 @@
+syntax = "proto3";
+package trunk.msgs;
+
+message Status {
+    uint32 all = 1;
+    // driver
+    uint32 lidar = 2;  // 1: ON 2: OFF
+    uint32 chassis = 3;
+    uint32 navigation = 4;
+    // actor
+    uint32 hdmap = 5;
+    uint32 localization = 6;
+    uint32 perception = 7;
+    uint32 aeb = 8;
+    uint32 control = 9;
+    uint32 pnd = 10;
+    uint32 guardian = 11;
+    uint32 ros_adapter = 12;
+    uint32 shift = 13;
+    uint32 watch = 14;
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package trunk.proto.fit;
+
+import "trunk/proto/fit/enums.proto";
+import "google/protobuf/timestamp.proto";
+
+message TaskRecord {
+  int32 trip = 1;          // 循环数
+  int32 teu = 2;           // TEU
+  int32 work_duration = 3; // 工作时长, 单位:h
+  double mileage = 4;      // 公里数,单位:km
+}
+
+message Statistics {
+  int32 ping_time = 1;        // ping延迟时间,单位:ms, 低频
+  TaskRecord task_record = 2; // 单车数据统计相关, 低频
+  uint32 align_cnt = 3;       // 对位次数
+  float align_shift = 4; // 执行对位位移，实际执行对位距离之和
+  float align_distance = 5; // 执行对位距离，实际执行对位距离绝对值之和
+  WorkState work_state = 6;   // 作业状态
+  string work_state_desc = 7; // 作业状态描述
+  int32 fault_level = 8;      // 故障等级, 1级最高
+  int32 speed_level = 9;      // 速度等级
+  bool dynamic_acceleration = 10; // false:不使用动态参数 true:使用动态参数
+  double curvature = 11;          // 曲率
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+package trunk.perception.msgs;
+
+import "LaneLine.proto";
+import "geometry.proto";
+
+message Lane {
+    enum LimitType {
+        PERMIT = 0;
+        PEJECT = 1;
+    }
+
+    trunk.msgs.Header header = 1;
+
+    // 0-left, 1-right, ...
+    repeated LaneLine line = 2;
+
+    // 0-vision, 1-lidar, ...
+    uint32 sensor_type = 3;
+
+    double center = 4;
+    uint32 score = 5;
+    uint32 id = 6;
+    double offset = 7;
+    double width = 8;
+}

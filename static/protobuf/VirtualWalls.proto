@@ -1,0 +1,19 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message VirtualWall {
+  uint32 type = 1;
+  double distance = 2;
+}
+
+message VirtualWalls {
+  google.protobuf.Timestamp timestamp = 1;
+  repeated VirtualWall walls = 2;
+}
+
+service VirtualWallsService {
+  rpc getVirtualWalls(google.protobuf.Empty) returns (VirtualWalls) {}
+}

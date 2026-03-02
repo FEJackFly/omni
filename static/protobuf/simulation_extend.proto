@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package trunk.msgs.v2;
+
+import "frame.proto";
+import "geometry.proto";
+
+
+// 仿真后端服务器状态
+message ServerState {
+    string type = 1;
+    string msg = 2;
+    float ping_value = 3;
+}
+
+
+// entity 的属性信息
+message EntityInfo {
+    string id = 1;
+    string type = 2;
+    string name = 3;
+    string model_name = 4;
+}
+
+
+// 包络信息
+message TrunkBounding {
+    uint32 type = 1;
+    double yaw = 2;  // 包络的 yaw
+    double relevant_yaw = 3;  // 相对于前面车挂或者车头的 yaw
+    Point3D pose = 4;  // 包络的前边界中心点
+    repeated Point3D bounding = 5; //  包络边界点
+}
+
+// 线性扩展
+message SimLiner {
+    uint32 type = 1;
+    repeated Point3D point = 2;
+}
+
+// 数据点扩展
+message SimPoint {
+    uint32 type = 1;
+    Point3D point = 2;
+}
+
+
+// 前端实时显示的 metric 结果信息
+message Metric {
+    repeated TrunkBounding metric_bounding = 1;  // metric bounding
+    repeated SimLiner metric_lines = 2;  // metric liner
+    repeated SimPoint metric_points = 3;  // metric point
+}
+
+
+// EntityState 用于 Visualization 扩展车辆状态使用
+message EntityState {
+    EntityInfo entity_info = 1;
+    repeated TrunkBounding trunk_bounding = 2;
+    Metric metric_info = 3;
+}
+
+
+// 仿真扩展 Visualization
+message Simulation {
+    float stamp = 1;
+    EntityState entity_state = 2;
+}
+
+
+message SimulationExtend {
+    Frame visualization = 1;
+    Simulation simulation_extend = 2;        // simulation 扩展使用
+}
+
+
+// 仿真需要支持多 entity
+message VisualizationList {
+    repeated SimulationExtend entities = 1;
+}

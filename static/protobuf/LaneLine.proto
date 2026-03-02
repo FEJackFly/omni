@@ -1,0 +1,35 @@
+syntax = "proto3";
+package trunk.perception.msgs;
+
+message LaneLine {
+    enum Type {
+        CURB = 0;
+        SOLID = 1;
+        DASHED = 2;
+        SOLID_DASHED = 3;
+        DASHED_SOLID = 4;
+        SOLID_SOLID = 5;
+        DASHED_DASHED = 6;
+    }
+    enum Color {
+        NO_COLOR = 0;
+        WHITE = 1;
+        YELLOW = 2;
+    }
+    uint32 id = 1;
+
+    repeated double line_factors = 2;
+
+    uint32 color = 3;
+    uint32 type = 4;
+    uint32 curvature = 5;
+    double score = 6;
+
+    // in camera frame
+    uint32 start_row = 7;
+    uint32 end_row = 8;
+
+    // in world frame
+    double start_x = 9;
+    double end_x = 10;
+}

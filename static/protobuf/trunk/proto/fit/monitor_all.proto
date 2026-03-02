@@ -1,0 +1,18 @@
+syntax = "proto3";
+package trunk.proto.fit;
+
+import "trunk/proto/fit/crane.proto";
+import "trunk/proto/fit/pin.proto";
+import "trunk/proto/fit/monitor_one.proto";
+import "google/protobuf/timestamp.proto";
+import "trunk/proto/fit/trafficlightinfo.proto";
+import "trunk/proto/fit/yard.proto";
+
+message MonitorAll {
+  google.protobuf.Timestamp timestamp = 1;
+  repeated MonitorOne monitor_ones = 2;
+  repeated Crane cranes = 3;
+  repeated Pin pins = 4;
+  repeated TrafficLightInfo traffic_light_infos = 5;  // 红绿灯工作状态
+  repeated Yard yard = 6;
+}

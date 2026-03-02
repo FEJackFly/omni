@@ -1,0 +1,20 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+import "frame.proto";
+import "replayer.proto";
+import "simulation.proto";
+
+message OfflineExtend {
+  Frame frame = 1;
+  AEB aeb = 2;                              // aeb消息
+  Camera camera = 3;                        //视频消息
+  repeated Lidar lidar = 4;                 //雷达消息
+  FusionDetection fusion_detection = 5;     //感知输出结果
+  string debug_figure = 6;                  // debug自定义图层
+  repeated EntityInfo entity_info = 7;      // 仿真车辆、metric数据
+  repeated VisionLane vision_lanes = 8;     // 视觉车道线
+  Constrain constrains = 9;                 // 约束条件
+  repeated RoadBoundary road_boundary = 10; // 防坠海边界线
+  repeated Environment.Object debug_objects = 11; // 检测objects
+}

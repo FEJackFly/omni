@@ -1,0 +1,23 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+/*****************************************************
+ *              项目扩展消息                 *
+ *****************************************************/
+
+message pro_sany_l2_extend {
+  enum Type {
+    TNP_OFF = 0;      //
+    TNP_STANDBY = 1;  //
+    TNP_RESUME = 2;   //
+    TNP_TNP = 3;   //
+    TNP_HWA = 4;   //
+    TNP_TJA = 5;   //三一项目lcc
+    TNP_ACC = 6;   //
+    TNP_REVERSIBLE_ERROR = 8;   //
+    TNP_IRREVERSIBLE_ERROR = 9;   //
+  }
+
+  uint32 pncc_tnpinfo_tnp_mode = 1;
+  string ad_software_version = 2;
+}

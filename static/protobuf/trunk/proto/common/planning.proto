@@ -1,0 +1,46 @@
+syntax = "proto3";
+package trunk.proto.common;
+
+import "trunk/proto/common/geometry.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+message PathPoint {
+  // vehicle coordinates
+  Point4D vehicle4d = 1;
+  // utm coordinates
+  Point4D utm4d = 2;
+  // curvature on the x-y planning
+  double kappa = 3;
+  // derivative of kappa w.r.t s.
+  double dkappa = 4;
+  // derivative of derivative of kappa w.r.t s.
+  double ddkappa = 5;
+  // accumulated distance from beginning of the path
+  double s = 6;
+  // angle between head truck and trailer, deg [0 ~ 2π]
+  double trailer_angle = 7;
+  // map speed limit, m/s
+  double map_limit_speed = 8;
+  // road slope, deg
+  double slope = 9;
+  // type
+  int32 type = 10;
+  // angle between head truck and trailer, deg [0 ~ 2π]
+  double utm_trailer_angle = 11;
+}
+
+message TrajectoryPoint {
+  // path point
+  PathPoint path_point = 1;
+  // relative time from beginning of the trajectory
+  double relative_time = 2;
+  // linear velocity in m/s
+  double v = 3;
+  // linear acceleration
+  double a = 4;
+  // longitudinal jerk
+  double da = 5;
+  // upper speed limit
+  double max_vel = 6;
+}

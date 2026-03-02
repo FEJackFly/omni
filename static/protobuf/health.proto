@@ -1,0 +1,221 @@
+syntax = "proto3";
+option cc_generic_services = true;
+package trunk.health;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+enum Status {
+  NORMAL = 0;
+  WEAK = 1;
+  RISK = 2;
+  FATAL = 3;
+}
+
+message Lidar {
+  enum Error {
+    E0 = 0;  // 无错误
+
+    E1 = 1;  // 初始化失败
+    E2 = 2;  // publish帧率异常
+  }
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Navigation {
+  enum Error {
+    E0 = 0;  // 无错误
+
+    E1 = 1;  // 端口错误
+    E2 = 2;  // 初始化失败
+    E3 = 4;  // 未收到串口数据
+    E4 = 8;  // TODO 预留
+
+    E5 = 16;   // 输出异常(星数异常,状态为异常)
+    E6 = 32;   // 轮速计异常
+    E7 = 64;   // TODO 预留
+    E8 = 128;  // TODO 预留
+  }
+
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Perception {
+  enum Error {
+    E0 = 0;  // 无错误
+
+    E1 = 1;  // 消息缺失: TF
+    E2 = 2;  // 消息缺失: 左雷达
+    E3 = 4;  // 消息缺失: 右雷达
+    E4 = 8;  // 消息缺失: 顶雷达
+
+    E5 = 16;   // 消息缺失: Region
+    E6 = 32;   // 消息缺失: VehicleState
+    E7 = 64;   // TODO 预留
+    E8 = 128;  // TODO 预留
+
+    E9 = 256;    // 图层: 可行驶区域图层初始化失败
+    E10 = 512;   // 图层: 点云特征图层初始化失败
+    E11 = 1024;  // 围栏: 算法初始化失败
+    E12 = 2048;  // 过滤: Trailer算法初始化失败
+
+    E13 = 4096;   // 过滤: MapMask算法初始化失败
+    E14 = 8192;   // Feature 算法初始化失败
+    E15 = 16384;  // Matcher 算法初始化失败
+    E16 = 32768;  // Cluster 算法初始化失败
+
+    E17 = 65536;   // Tracking 算法初始化失败
+    E18 = 131072;  // 雷达时间滞后L1
+    E19 = 262144;  // 雷达时间滞后L2
+    E20 = 524288;  // 雷达时间帧帧间距过大 L1
+
+    E21 = 1048576;  // 雷达时间帧帧间距过大 L2
+    E22 = 2097152;  // TODO
+    E23 = 4194304;  // TODO
+  }
+
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Localization {
+  enum Error {
+    E0 = 0;  // 无错误
+
+    E1 = 1;  // 消息缺失: Nav
+    E2 = 2;  // 消息缺失: Canbus
+    E3 = 4;  // 消息缺失: Lidar_odom
+    E4 = 8;  // 消息缺失: Barrier
+
+    E5 = 16;   // 消息缺失: Region
+    E6 = 32;   // 消息缺失: Map
+    E7 = 64;   // TODO 预留
+    E8 = 128;  // TODO 预留
+
+    E9 = 256;    // 融合定位输出丢失
+    E10 = 512;   // 激光全局与融合定位结果偏差超过阈值
+    E11 = 1024;  // 融合定位信息自校验异常
+    E12 = 2048;  // TODO 预留
+
+    E13 = 4096;   // EKF 算法初始化失败
+    E14 = 8192;   // canbus轮速数据异常
+    E15 = 16384;  // canbus轮速缺失
+  }
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message HDMap {
+  enum Error {
+    E0 = 0;  // 无错误
+
+    // 一次规划
+    E1 = 1;  // 终点不在地图上
+    E2 = 2;  // 定位点不在地图上
+    E3 = 4;  // 终点不可达
+
+    // 局部地图
+    E4 = 8;   // 没有规划路径
+    E5 = 16;  // 定位点偏离一次规划路径
+  }
+  google.protobuf.Timestamp timestamp = 1;
+  int64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Pnc {
+  enum Error {
+    // No error, returns on success.
+    OK = 0;
+
+    // decision err code
+    DECISION_ERROR = 100;
+    DECISION_ERROR_INVALID_LANE_ID = 101;
+    DECISION_ERROR_EMPTY_LANES = 102;
+
+    // planning err code
+    PLANNING_ERROR = 200;
+    PLANNING_ERROR_EMPTY = 201;
+    PLANNING_ERROR_SPARSE = 202;
+    PLANNING_ERROR_UNSOLVABLE = 203;
+    PLANNING_ERROR_NULLP = 204;
+    PLANNING_ERROR_INIT_POINT = 205;
+
+    // control err code
+    CONTROL_ERROR = 300;
+    CONTROL_ERROR_NO_POINTS = 301;
+    CONTROL_ERROR_LESS_POINTS = 302;
+    CONTROL_ERROR_UNSOLVABLE = 303;
+  }
+
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Canbus {
+  enum Error {
+    E0 = 0;              // 无错误
+    E_NET_ERROR = 1;     // 通讯故障
+    E_CONTROL_LOST = 2;  // 控制消息丢失  500ms
+    E_CDC_LOST = 4;      // CDC消息丢失   500ms
+  }
+
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message World {
+  enum Error {
+    E0 = 0;
+
+    E_AGENT_SCHEDULE_TIMEOUT = 1;
+    E_CONNECTOR_SCHEDULE_TIMEOUT = 2;
+  }
+  google.protobuf.Timestamp timestamp = 1;
+  uint64 error = 2;
+  Status status = 3;
+  string info = 4;
+}
+
+message Resource {
+  google.protobuf.Timestamp timestamp = 1;
+  double cpu_usage = 2;
+  double memory_usage = 3;
+  double disk_space = 4;
+  double disk_loads = 5;
+  double network_usage = 6;
+  Status status = 7;
+  repeated string info = 8;
+}
+
+message Health {
+  google.protobuf.Timestamp timestamp = 1;
+  Status status = 2;
+  Lidar lidar = 3;
+  Navigation navigation = 4;
+  Perception perception = 5;
+  Localization localization = 6;
+  HDMap hdmap = 7;
+  World world = 8;
+  Canbus canbus = 9;
+  Resource resource = 10;
+}
+
+service HealthService {
+  rpc get_health(google.protobuf.Empty) returns (Health);
+}

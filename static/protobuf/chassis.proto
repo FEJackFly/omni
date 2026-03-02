@@ -1,0 +1,110 @@
+syntax = "proto3";
+package trunk.msgs;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+message Chassis {
+    google.protobuf.Timestamp timestamp = 1; 
+
+    uint32 vehicle_running_status = 2;           // 车辆启停状态
+    uint32 auto_driver_status = 3;               // 自动驾驶状态 0:自动模式 1:人工模式 2:遥控模式 3:远控模式 4:维保模式
+    uint32 longtiu_control_status = 4;           // 纵向控制模式
+    uint32 lateral_control_status = 5;           // 横向控制模式
+    uint32 vehicle_error_status = 6;            // 车辆故障状态
+    uint32 emergency_stop_status = 7;            // 外部紧急制动状态 0: 无急停 1: 小遥控器 2: 车身左侧急停按键 3: 车身右侧急停按键
+
+    uint32 steering_status = 8;                  // 转向器状态
+    uint32 brake_status = 9;                     // 制动状态
+    uint32 epb_status = 10;                      // 电子手刹状态
+
+    double steering_angle = 11;                // 方向盘转向角度
+    double steering_angle_speed = 12;          // 转向角速度
+    repeated double wheel_angle = 13;          // 车轮转角 Z字形：依次为#1轴左、#1轴右、#2轴左、#2轴右、#3轴左、#3轴右、#4轴左、#4轴右
+    double steering_torque = 14;               // 转向器扭矩
+
+    uint32 gear = 15;                            // 挡位反馈
+
+    double throttle = 16;                      // 油门百分比
+    double vehicle_torque = 17;                // 发动机/电机扭矩
+    double vehicle_rpm = 18;                   // 发动机/电机转速
+
+    double brake = 19;                         // 制动百分比
+    repeated double brake_pressure = 20;       // 制动压力
+
+    double vehicle_speed = 21;                 // 车速
+    repeated double wheel_speed = 22;          // 车轮速度 Z字形：依次为#1轴左、#1轴右、#2轴左、#2轴右、#3轴左、#3轴右、#4轴左、#4轴右
+    repeated double wheel_odometer = 23;       // 轮速传感器原始值 同轮速对应
+    repeated double tire_pressure = 24;        // 胎压 同轮速对应
+    double longitu_acceleration = 25;          // 纵向加速度
+    double lateral_acceleration = 26;          // 横向加速度
+    double yaw_rate = 27;                      // 横摆角速度
+
+    uint32 postion_status = 28;                  // 车辆完成动作   车辆已到达
+    uint32 vehicle_charging_status = 29;         // 车辆充电状态
+    uint32 charging_connection_status = 30;      // 充电枪链接状态
+
+    uint32 soc = 31;                             // 剩余电量
+    uint32 travelable_mileage = 32;              // 可行驶里程
+    double total_car_kilometer = 33;            // 车辆已行驶里程
+    double vehicle_weight = 34;                // 车辆重量
+    double trailer_weight = 35;                // 挂车重量
+    uint32 wiper_status = 36;                    // 雨刮器状态
+    uint32 horn_status = 37;                     // 喇叭状态
+    uint32 light_status = 38;                    // 灯状态
+    uint32 turn_light_status = 39;               // 转向灯状态
+
+    double trailer_angle1 = 40;                // 挂车角度
+    double trailer_angle2 = 41;                // 挂车角度
+
+    uint32 version_number = 42;                 // 版本号
+
+    uint32  debug0 = 43;                         // 调试信息 
+    uint32 debug1 = 44;                         // 调试信息
+    uint32 debug2 = 45;                         // 调试信息
+    double debug3 = 46;                        // 调试信息
+
+    uint32 DRIVER_MANUAL = 47;                   
+    uint32 DRIVER_AUTO = 48;                     
+
+    uint32 VEHICLE_STOP = 49;                    
+    uint32 VEHICLE_START = 50;                   
+
+    uint32 VEHICLE_NOT_ARRIVED = 51;             
+    uint32 VEHICLE_ARRIVED = 52;                 
+
+    uint32 GEAR_P = 53;                          
+    uint32 GEAR_R = 54;                          
+    uint32 GEAR_N = 55;                          
+    uint32 GEAR_D = 56;                          
+    uint32 GEAR_D1 = 57;                         
+    uint32 GEAR_D2 = 58;                         
+    uint32 GEAR_D3 = 59;                         
+    uint32 GEAR_D4 = 60;                         
+    uint32 GEAR_D5 = 61;                         
+    uint32 GEAR_D6 = 62;                         
+    uint32 GEAR_D7 = 63;                         
+    uint32 GEAR_D8 = 64;                         
+    uint32 GEAR_D9 = 65;                         
+    uint32 GEAR_D10 = 66;                        
+    uint32 GEAR_D11 = 67;                        
+    uint32 GEAR_D12 = 68;                        
+
+    int32 motor_temperature = 69;          // 电机温度
+    int32 motor_control_temperature = 70;  // 电机控制器温度
+    int32 Min_cell_temperature = 71;       // 电池最低温度
+    int32 Max_cell_temperature = 72;       // 电池最高温度
+    int32 control_temperature = 73;        // 控制器温度
+    int32 front_motor_rpm = 74;            // 前电机转速
+    int32 rear_motor_rpm = 75;             // 后电机转速
+    int32 front_motor_torque = 76;         // 前电机扭矩
+    int32 rear_motor_torque = 77;          // 后电机扭矩
+    uint32 HV_status = 78;                 // 整车高压状态反馈 1高压状态 0下高压状态
+    uint32 bypass_status = 79;             // 故障忽略使能状态 0未激活 1激活
+    uint32 bypass_code_back = 80;          // 故障忽略代码反馈
+    uint32 total_time = 81;                // 总运行时间 h 
+}
+
+service ChassisService {
+  rpc getChassis(google.protobuf.Empty) returns (Chassis) {}
+}

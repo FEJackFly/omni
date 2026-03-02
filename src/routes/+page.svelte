@@ -29,16 +29,27 @@
 
 	const CENTER: [number, number] = [139.7672, 35.6812];
 
-	const emptyStyle: StyleSpecification = {
-		version: 8,
-		name: 'Empty Style',
-		sources: {},
-		layers: []
+	const themes: Record<string, string> = {
+		Blue: '/map_styles/blue.json',
+		Dark: '/map_styles/dark.json',
+		Light: '/map_styles/light.json',
+		Satellite: '/map_styles/satellite.json'
 	};
+
+	let currentThemeKey = $state('Blue');
+	let currentStyleUrl = $derived(themes[currentThemeKey]);
 </script>
 
 <div class="map-container">
-	<MapLibre class="map" style={emptyStyle} zoom={15} pitch={60} bearing={-45} center={CENTER}>
+	<div class="theme-selector">
+		<label for="theme-select">选择主题：</label>
+		<select id="theme-select" bind:value={currentThemeKey}>
+			{#each Object.keys(themes) as key}
+				<option value={key}>{key}</option>
+			{/each}
+		</select>
+	</div>
+	<MapLibre class="map" style={currentStyleUrl} zoom={15} pitch={60} bearing={-45} center={CENTER}>
 		<GlobeControl />
 		<Projection />
 
@@ -56,35 +67,6 @@
 				})
 			]}
 		/>
-		{#if emptyStyle.sources && Object.keys(emptyStyle.sources).length > 0}
-			<FillExtrusionLayer
-				source="carto"
-				sourceLayer="building"
-				minzoom={14}
-				paint={{
-					'fill-extrusion-color': '#aaa',
-					'fill-extrusion-height': [
-						'interpolate',
-						['linear'],
-						['zoom'],
-						14,
-						0,
-						14.05,
-						['get', 'render_height']
-					],
-					'fill-extrusion-base': [
-						'interpolate',
-						['linear'],
-						['zoom'],
-						14,
-						0,
-						14.05,
-						['get', 'render_min_height']
-					],
-					'fill-extrusion-opacity': 0.8
-				}}
-			/>
-		{/if}
 	</MapLibre>
 </div>
 
@@ -98,5 +80,29 @@
 	.map-container :global(.map) {
 		width: 100%;
 		height: 100%;
+	}
+
+	.theme-selector {
+		position: absolute;
+		top: 20px;
+		left: 20px;
+		z-index: 10;
+		background: rgba(255, 255, 255, 0.9);
+		padding: 10px 16px;
+		border-radius: 8px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-family: sans-serif;
+		backdrop-filter: blur(4px);
+	}
+
+	.theme-selector select {
+		padding: 6px;
+		border-radius: 4px;
+		border: 1px solid #ddd;
+		outline: none;
+		cursor: pointer;
 	}
 </style>

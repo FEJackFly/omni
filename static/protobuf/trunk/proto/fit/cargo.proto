@@ -1,0 +1,10 @@
+syntax = "proto3";
+package trunk.proto.fit;
+
+message Cargo {
+  string vin = 1;       // 商品车VIN码
+  uint32 length = 2;    // 商品车长，单位mm
+  uint32 width = 3;     // 商品车宽，单位mm
+  uint32 height = 4;    // 商品车高，单位mm
+  string rfid_vin = 5;  // 小车的rfid卡号
+}

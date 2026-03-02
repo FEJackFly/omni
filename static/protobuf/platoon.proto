@@ -1,0 +1,81 @@
+syntax = "proto3";
+package trunk.msgs.v2;
+
+import "geometry.proto";
+
+/*****************************************************
+ *              编队驾驶数据接口                     *
+ *****************************************************/
+message PlatoonData {
+  enum DelayLevel {
+    NORMAL = 0;
+    WARNING = 1;
+    ERROR = 2;
+    FATAL = 3;
+  }
+  enum LaneChange {
+    STRAIGHT = 0; // 车道保持
+    LEFT  = 1;    // 向左变道
+    RIGHT = 2;    // 向右变道
+  }
+
+  message Vehicle {
+    string uid = 1;                             // 车辆ID[服务端弃用]
+    string plate_number = 2;                    // 车牌号
+    Point4D pose = 3;                           // 车辆位姿
+    int32 platoon_number = 4;                   // 车辆位置(默认: -1, 领航车: 0)
+    float distance = 5;                         // 车距(实际车距, 相对前车, 领航车: 0)
+    float speed = 6;                            // 车速(实际车速 单位:m/s)
+    DelayLevel delay_level = 7;                 // v2x延迟级别
+    float delay_time = 8;                       // v2x延时(单位: ms)
+    string vehicle_type = 9;                    // 车头类型(参考trunk_common定义)
+    string trailer_type = 10;                   // 后挂类型(参考trunk_common定义, 没有后挂时为空)
+    repeated int32 occupied_seat = 11;          // 被占用座椅id(1:主驾 2:副驾 3:后排左 4:后排中 5:后排右)
+    int32 pullover_status = 12;                 // 靠边停车状态(1:靠边停车 2:正常行驶)
+  }
+  message Options {
+    float distance = 1;                         // 编队车距(单位: m)
+    float speed = 2;                            // 编队车速(单位: km/h)
+    float time_gap = 3;                         // 编队时距(单位: s)
+    LaneChange lane_change = 4;                 // 变道
+  }
+
+  Vehicle ego = 1;                              // 当前车辆信息
+  repeated Vehicle vehicles = 2;                // 编队信息
+  Options options = 3;                          // 编队选项
+}
+
+
+/*****************************************************
+ *              编队驾驶功能接口                     *
+ *****************************************************/
+message PlatoonAction {
+  uint32 mode = 1;              // 0: 创建 1: 解散(主车) 2: 加入(从车) 3: 退出(从车)
+}
+
+message PlatoonDistance {
+  float distance = 1;           // 主车(大于0: + 小于0: -)
+}
+
+message PlatoonSpeed {
+  float speed = 1;              // 主车(大于0: + 小于0: -)
+}
+
+message PlatoonTimeGap {
+  float data = 1;               // 主车(大于0: + 小于0: -)
+}
+
+message PlatoonForceLaneChange {
+  PlatoonData.LaneChange data = 1;
+}
+
+// 靠边停车
+message PullOver {
+  string plate_number = 1;      // 车牌号
+  int32 command_type = 2;       // 1:靠边停车 2:解除停车,恢复行驶
+}
+
+// 座椅状态
+message SeatStatus {
+  repeated int32 occupied_id = 1; // 被占用座椅id(1:主驾 2:副驾 3:后排左 4:后排中 5:后排右)
+}

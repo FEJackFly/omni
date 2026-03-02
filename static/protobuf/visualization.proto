@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package trunk.msgs;
+
+import "geometry.proto";
+import "chassis.proto";
+import "perception.proto";
+import "hdmap.proto";
+import "decision.proto";
+import "AebCollision.proto";
+import "google/protobuf/timestamp.proto";
+
+// 自车规控期望数据
+message ExpectPnc {
+  double steering_angle = 1;
+  double vehicle_speed = 2;
+  double throttle = 3;
+  double brake = 4;
+  double steering_angle_front = 5;
+  double steering_angle_rear = 6;
+}
+
+// 自车数据
+message Ego {
+  double yaw = 1;
+  Point3D position = 2;
+  Twist velocity = 3;
+  Chassis chassis = 4;
+  DecisionCmd decision = 5;
+  ExpectPnc expect_pnc = 6;
+  AebCollision aeb_status = 7;
+  int32 UTMZone = 8;  // utm带号
+}
+
+// 可行驶区域
+message DrivableLane {
+  repeated Point4D center_line = 1;
+  repeated Point2D left_line = 2;
+  repeated Point2D right_line = 3;
+  repeated int32 type = 4;  // [left_type, right_color] 0:未知 1:实线 2:虚线 3:路边 4:波茨点 5:虚拟线
+  repeated int32 color = 5; // [left_color, right_color] 0:未知 1:白线 2:黄线
+}
+
+message DrivableArea {
+  repeated DrivableLane lane = 1;
+}
+
+// 单个障碍物预测轨迹
+message ObjectTrajectory {
+    repeated Point3D point = 1;
+}
+
+message Visualization {
+  Ego ego = 1;                                       // 自车数据
+  repeated Point3D static_objs = 2;                  // 静态点云
+  repeated DynamicObstacle dynamic_objs = 3;         // 动态包络
+  TargetLanes target_lanes = 4;                      // 一次规划
+  repeated Point4D real_trajectory = 5;              // 实时轨迹
+  DrivableArea drivable_area = 6;                    // 可行驶区域
+  repeated ObjectTrajectory prediction_objects = 7;  // 障碍物预测轨迹
+  repeated int32 ErrorCode = 8;                      // 故障码列表
+  google.protobuf.Timestamp timestamp = 9;           // 时间戳
+}
