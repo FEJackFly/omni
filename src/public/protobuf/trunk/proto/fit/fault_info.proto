@@ -1,9 +1,0 @@
-syntax = "proto3";
-package trunk.proto.fit;
-
-
-
-message FaultInfo{
-  string code = 1; // 故障代码
-  string desc = 2; // 故障名称
-}
