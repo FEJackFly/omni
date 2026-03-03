@@ -2,7 +2,7 @@
  * @Author: jack 501177081@qq.com
  * @Date: 2026-03-03 14:33:53
  * @LastEditors: jack 501177081@qq.com
- * @LastEditTime: 2026-03-03 16:37:11
+ * @LastEditTime: 2026-03-03 16:52:32
  * @FilePath: /svelte_omni/src/lib/components/measure/measure.svelte.ts
  * @Description:
  *
