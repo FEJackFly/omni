@@ -4,11 +4,7 @@
     "metadata": {
         "description": "基于 ESRI World Imagery 的卫星图底图，叠加 OpenFreeMap 道路标注，支持 3D 地形"
     },
-    "center": [116.38, 39.9],
-    "zoom": 3,
-    "bearing": 0,
-    "pitch": 0,
-    "sprite": "/sprites/ofm",
+    "sprite": "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
     "sources": {
         "openmaptiles": {
             "type": "vector",

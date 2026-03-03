@@ -7,11 +7,21 @@
 		themes: string[];
 		currentTheme: string;
 		currentView: '2d' | '3d';
+		projection: 'mercator' | 'globe';
 		onthemechange: (theme: string) => void;
 		onviewchange: (view: '2d' | '3d') => void;
+		onprojectionchange: (projection: 'mercator' | 'globe') => void;
 	}
 
-	let { themes, currentTheme, currentView, onthemechange, onviewchange }: Props = $props();
+	let {
+		themes,
+		currentTheme,
+		currentView,
+		projection,
+		onthemechange,
+		onviewchange,
+		onprojectionchange
+	}: Props = $props();
 
 	/** 当前激活的绘图/测量工具 */
 	type DrawTool =
@@ -27,13 +37,17 @@
 		onviewchange(currentView === '2d' ? '3d' : '2d');
 	}
 
+	function toggleProjection() {
+		onprojectionchange(projection === 'mercator' ? 'globe' : 'mercator');
+	}
+
 	function handleDrawTool(tool: DrawTool) {
 		activeTool = activeTool === tool ? null : tool;
 	}
 </script>
 
 <div class="map-toolbar">
-	<!-- 视图切换：单按钮 toggle -->
+	<!-- 视图切换：单按钮 toggle + 地球切换 -->
 	<ToolbarGroup>
 		<ToolbarButton
 			label={currentView === '2d' ? '切换到 3D 视图' : '切换到 2D 视图'}
@@ -50,6 +64,19 @@
 					<path d="M2 12l10 5 10-5" />
 				</svg>
 			{/if}
+		</ToolbarButton>
+		<ToolbarButton
+			label={projection === 'mercator' ? '开启地球模式' : '开启平面模式'}
+			active={projection === 'globe'}
+			onclick={toggleProjection}
+		>
+			<!-- 地球图标 -->
+			<svg viewBox="0 0 24 24">
+				<circle cx="12" cy="12" r="10" />
+				<path
+					d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
+				/>
+			</svg>
 		</ToolbarButton>
 	</ToolbarGroup>
 

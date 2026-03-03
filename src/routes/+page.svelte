@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { MapLibre, GlobeControl, Projection, FillExtrusionLayer } from 'svelte-maplibre-gl';
+	import { MapLibre, Projection, FillExtrusionLayer } from 'svelte-maplibre-gl';
 	import { DeckGLOverlay } from '@svelte-maplibre-gl/deckgl';
 	import { ArcLayer } from 'deck.gl';
 	import type { StyleSpecification } from 'maplibre-gl';
@@ -41,6 +41,7 @@
 	const SATELLITE_STYLE_URL = '/map_styles/satellite.json';
 
 	let currentThemeKey = $state('Blue');
+	let projection = $state<'mercator' | 'globe'>('mercator');
 
 	/** Blue/Dark/Light 由构建器生成对象，Satellite 走 JSON URL */
 	let currentStyle: StyleSpecification | string = $derived(
@@ -59,19 +60,25 @@
 	function handleThemeChange(theme: string) {
 		currentThemeKey = theme;
 	}
+
+	/** 投影切换回调 */
+	function handleProjectionChange(p: 'mercator' | 'globe') {
+		projection = p;
+	}
 </script>
 
 <div class="map-container">
-	<MapToolbar
-		themes={ALL_THEMES}
-		currentTheme={currentThemeKey}
-		{currentView}
-		onthemechange={handleThemeChange}
-		onviewchange={handleViewChange}
-	/>
 	<MapLibre class="map" style={currentStyle} {...mapState}>
-		<GlobeControl />
-		<Projection />
+		<MapToolbar
+			themes={ALL_THEMES}
+			currentTheme={currentThemeKey}
+			{currentView}
+			{projection}
+			onthemechange={handleThemeChange}
+			onviewchange={handleViewChange}
+			onprojectionchange={handleProjectionChange}
+		/>
+		<Projection type={projection} />
 
 		<DeckGLOverlay
 			interleaved
