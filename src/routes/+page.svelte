@@ -3,6 +3,8 @@
 	import { MapLibre, GlobeControl, Projection, FillExtrusionLayer } from 'svelte-maplibre-gl';
 	import { DeckGLOverlay } from '@svelte-maplibre-gl/deckgl';
 	import { ArcLayer } from 'deck.gl';
+	import type { StyleSpecification } from 'maplibre-gl';
+	import { buildMapStyle, THEME_NAMES } from '$lib/map';
 
 	const NUM = 30;
 	let data: { source: [number, number]; target: [number, number] }[] = $state([]);
@@ -25,31 +27,38 @@
 		return () => cancelAnimationFrame(handle);
 	});
 
-	import type { StyleSpecification } from 'maplibre-gl';
-
 	const CENTER: [number, number] = [139.7672, 35.6812];
 
-	const themes: Record<string, string> = {
-		Blue: '/map_styles/blue.json',
-		Dark: '/map_styles/dark.json',
-		Light: '/map_styles/light.json',
-		Satellite: '/map_styles/satellite.json'
-	};
+	/** 可选主题：动态构建 + Satellite（独立 JSON） */
+	const ALL_THEMES = [...THEME_NAMES, 'Satellite'];
+	const SATELLITE_STYLE_URL = '/map_styles/satellite.json';
 
 	let currentThemeKey = $state('Blue');
-	let currentStyleUrl = $derived(themes[currentThemeKey]);
+
+	/** Blue/Dark/Light 由构建器生成对象，Satellite 走 JSON URL */
+	let currentStyle: StyleSpecification | string = $derived(
+		currentThemeKey === 'Satellite' ? SATELLITE_STYLE_URL : buildMapStyle(currentThemeKey)
+	);
 </script>
 
 <div class="map-container">
 	<div class="theme-selector">
 		<label for="theme-select">选择主题：</label>
 		<select id="theme-select" bind:value={currentThemeKey}>
-			{#each Object.keys(themes) as key}
+			{#each ALL_THEMES as key}
 				<option value={key}>{key}</option>
 			{/each}
 		</select>
 	</div>
-	<MapLibre class="map" style={currentStyleUrl} zoom={15} pitch={60} bearing={-45} center={CENTER}>
+	<MapLibre
+		class="map"
+		style={currentStyle}
+		zoom={15}
+		pitch={0}
+		bearing={-45}
+		center={CENTER}
+		maxPitch={80}
+	>
 		<GlobeControl />
 		<Projection />
 

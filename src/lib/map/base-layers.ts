@@ -5,7 +5,7 @@
  */
 
 import type { LayerSpecification } from 'maplibre-gl';
-import type { ThemeTokens } from '../theme-tokens';
+import type { ThemeTokens } from './theme-tokens';
 
 /** 通用 text-field 表达式：优先本地语言，降级到拉丁语 */
 const TEXT_FIELD_LOCAL = ['coalesce', ['get', 'name'], ['get', 'name:latin']];
