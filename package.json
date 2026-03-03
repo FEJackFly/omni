@@ -18,6 +18,7 @@
 		"@sveltejs/kit": "^2.50.2",
 		"@sveltejs/vite-plugin-svelte": "^6.2.4",
 		"@tailwindcss/vite": "^4.1.18",
+		"@types/geojson": "^7946.0.16",
 		"@types/three": "0.182.0",
 		"maplibre-gl": "^5.18.0",
 		"prettier": "^3.8.1",
@@ -31,6 +32,9 @@
 	},
 	"dependencies": {
 		"@svelte-maplibre-gl/deckgl": "^1.0.3",
+		"@turf/area": "^7.3.4",
+		"@turf/helpers": "^7.3.4",
+		"@turf/length": "^7.3.4",
 		"deck.gl": "^9.2.6",
 		"lucide-svelte": "^0.576.0",
 		"svelte-maplibre-gl": "^1.0.3",

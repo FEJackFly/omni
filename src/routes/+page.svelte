@@ -6,6 +6,7 @@
 	import type { StyleSpecification, Map as MapLibreInstance } from 'maplibre-gl';
 	import { buildMapStyle, THEME_NAMES } from '$lib/map';
 	import MapToolbar from '$lib/components/toolbar/MapToolbar.svelte';
+	import MeasureTool from '$lib/components/measure/MeasureTool.svelte';
 
 	const NUM = 30;
 	let data: { source: [number, number]; target: [number, number] }[] = $state([]);
@@ -51,6 +52,7 @@
 	let currentView = $state<'2d' | '3d'>('2d');
 	let map: MapLibreInstance | undefined = $state();
 	let mousePos = $state<{ lng: number; lat: number } | null>(null);
+	let activeMeasure = $state<'distance' | 'area' | null>(null);
 
 	/** 视图切换回调 */
 	function handleViewChange(view: '2d' | '3d') {
@@ -97,6 +99,16 @@
 			document.documentElement.dataset.theme = currentThemeKey;
 		}
 	});
+
+	/** 测量模式切换回调 */
+	function handleMeasure(mode: 'distance' | 'area' | null) {
+		activeMeasure = mode;
+		// 测量时自动切换到 2D 视图，避免 3D 下坐标不准
+		if (mode) {
+			currentView = '2d';
+			mapState.pitch = 0;
+		}
+	}
 </script>
 
 <div class="map-container">
@@ -123,9 +135,11 @@
 			onprojectionchange={handleProjectionChange}
 			onzoomchange={handleZoomChange}
 			onbearingreset={handleBearingReset}
+			onmeasure={handleMeasure}
 		/>
 		<Projection type={projection} />
 		<ScaleControl position="bottom-left" unit="metric" />
+		<MeasureTool {map} mode={activeMeasure} />
 
 		<DeckGLOverlay
 			interleaved

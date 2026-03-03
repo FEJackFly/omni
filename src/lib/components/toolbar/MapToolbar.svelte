@@ -28,6 +28,7 @@
 		onprojectionchange: (projection: 'mercator' | 'globe') => void;
 		onzoomchange: (delta: number) => void;
 		onbearingreset: () => void;
+		onmeasure: (mode: 'distance' | 'area' | null) => void;
 	}
 
 	let {
@@ -40,7 +41,8 @@
 		onviewchange,
 		onprojectionchange,
 		onzoomchange,
-		onbearingreset
+		onbearingreset,
+		onmeasure
 	}: Props = $props();
 
 	/** 当前激活的绘图/测量工具 */
@@ -63,6 +65,15 @@
 
 	function handleDrawTool(tool: DrawTool) {
 		activeTool = activeTool === tool ? null : tool;
+
+		// 同步测量模式至父组件
+		if (activeTool === 'measure-distance') {
+			onmeasure('distance');
+		} else if (activeTool === 'measure-area') {
+			onmeasure('area');
+		} else {
+			onmeasure(null);
+		}
 	}
 </script>
 
