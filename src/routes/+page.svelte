@@ -3,7 +3,7 @@
 	import { MapLibre, Projection, FillExtrusionLayer } from 'svelte-maplibre-gl';
 	import { DeckGLOverlay } from '@svelte-maplibre-gl/deckgl';
 	import { ArcLayer } from 'deck.gl';
-	import type { StyleSpecification } from 'maplibre-gl';
+	import type { StyleSpecification, Map as MapLibreInstance } from 'maplibre-gl';
 	import { buildMapStyle, THEME_NAMES } from '$lib/map';
 	import MapToolbar from '$lib/components/toolbar/MapToolbar.svelte';
 
@@ -49,6 +49,7 @@
 	);
 
 	let currentView = $state<'2d' | '3d'>('2d');
+	let map: MapLibreInstance | undefined = $state();
 
 	/** 视图切换回调 */
 	function handleViewChange(view: '2d' | '3d') {
@@ -66,6 +67,24 @@
 		projection = p;
 	}
 
+	/** 缩放回调 */
+	function handleZoomChange(delta: number) {
+		if (map) {
+			map.zoomTo(map.getZoom() + delta, { duration: 300 });
+		} else {
+			mapState.zoom = Math.max(0, Math.min(22, mapState.zoom + delta));
+		}
+	}
+
+	/** 指南针重置 */
+	function handleBearingReset() {
+		if (map) {
+			map.resetNorth();
+		} else {
+			mapState.bearing = 0;
+		}
+	}
+
 	/** 同步主题到全局 HTML 属性 */
 	$effect(() => {
 		if (typeof document !== 'undefined') {
@@ -75,15 +94,27 @@
 </script>
 
 <div class="map-container">
-	<MapLibre class="map" style={currentStyle} {...mapState}>
+	<MapLibre
+		bind:map
+		class="map"
+		style={currentStyle}
+		bind:zoom={mapState.zoom}
+		bind:pitch={mapState.pitch}
+		bind:bearing={mapState.bearing}
+		bind:center={mapState.center}
+		maxPitch={mapState.maxPitch}
+	>
 		<MapToolbar
 			themes={ALL_THEMES}
 			currentTheme={currentThemeKey}
 			{currentView}
 			{projection}
+			bearing={mapState.bearing}
 			onthemechange={handleThemeChange}
 			onviewchange={handleViewChange}
 			onprojectionchange={handleProjectionChange}
+			onzoomchange={handleZoomChange}
+			onbearingreset={handleBearingReset}
 		/>
 		<Projection type={projection} />
 

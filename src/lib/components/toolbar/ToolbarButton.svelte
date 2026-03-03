@@ -35,11 +35,6 @@
 	.toolbar-btn :global(svg) {
 		width: 18px;
 		height: 18px;
-		stroke: currentColor;
-		fill: none;
-		stroke-width: 1.8;
-		stroke-linecap: round;
-		stroke-linejoin: round;
 	}
 
 	.toolbar-btn:hover {

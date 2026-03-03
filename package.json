@@ -32,6 +32,7 @@
 	"dependencies": {
 		"@svelte-maplibre-gl/deckgl": "^1.0.3",
 		"deck.gl": "^9.2.6",
+		"lucide-svelte": "^0.576.0",
 		"svelte-maplibre-gl": "^1.0.3",
 		"three": "^0.182.0"
 	}

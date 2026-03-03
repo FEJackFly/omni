@@ -2,15 +2,32 @@
 	import ToolbarButton from './ToolbarButton.svelte';
 	import ToolbarGroup from './ToolbarGroup.svelte';
 	import ThemePanel from './ThemePanel.svelte';
+	import {
+		Palette,
+		PenTool,
+		MapPin,
+		Spline,
+		Pentagon,
+		Ruler,
+		Scaling,
+		Square,
+		Box,
+		Globe,
+		Plus,
+		Minus
+	} from 'lucide-svelte';
 
 	interface Props {
 		themes: string[];
 		currentTheme: string;
 		currentView: '2d' | '3d';
 		projection: 'mercator' | 'globe';
+		bearing: number;
 		onthemechange: (theme: string) => void;
 		onviewchange: (view: '2d' | '3d') => void;
 		onprojectionchange: (projection: 'mercator' | 'globe') => void;
+		onzoomchange: (delta: number) => void;
+		onbearingreset: () => void;
 	}
 
 	let {
@@ -18,9 +35,12 @@
 		currentTheme,
 		currentView,
 		projection,
+		bearing,
 		onthemechange,
 		onviewchange,
-		onprojectionchange
+		onprojectionchange,
+		onzoomchange,
+		onbearingreset
 	}: Props = $props();
 
 	/** 当前激活的绘图/测量工具 */
@@ -47,6 +67,79 @@
 </script>
 
 <div class="map-toolbar">
+	<!-- 主题切换：二级菜单 -->
+	<ToolbarGroup>
+		<div class="hover-menu">
+			<ToolbarButton label="切换主题">
+				<Palette size={18} />
+			</ToolbarButton>
+			<div class="hover-panel">
+				<ThemePanel {themes} current={currentTheme} onselect={onthemechange} />
+			</div>
+		</div>
+	</ToolbarGroup>
+
+	<!-- 绘图工具：二级菜单 -->
+	<ToolbarGroup>
+		<div class="hover-menu">
+			<ToolbarButton label="绘图工具" active={!!activeTool && activeTool.startsWith('draw-')}>
+				<PenTool size={18} />
+			</ToolbarButton>
+			<div class="hover-panel">
+				<div class="vertical-panel">
+					<ToolbarButton
+						label="画点"
+						active={activeTool === 'draw-point'}
+						onclick={() => handleDrawTool('draw-point')}
+					>
+						<MapPin size={18} />
+					</ToolbarButton>
+					<ToolbarButton
+						label="画线"
+						active={activeTool === 'draw-line'}
+						onclick={() => handleDrawTool('draw-line')}
+					>
+						<Spline size={18} />
+					</ToolbarButton>
+					<ToolbarButton
+						label="画面"
+						active={activeTool === 'draw-polygon'}
+						onclick={() => handleDrawTool('draw-polygon')}
+					>
+						<Pentagon size={18} />
+					</ToolbarButton>
+				</div>
+			</div>
+		</div>
+	</ToolbarGroup>
+
+	<!-- 测量工具：二级菜单 -->
+	<ToolbarGroup>
+		<div class="hover-menu">
+			<ToolbarButton label="测量工具" active={!!activeTool && activeTool.startsWith('measure-')}>
+				<Ruler size={18} />
+			</ToolbarButton>
+			<div class="hover-panel">
+				<div class="vertical-panel">
+					<ToolbarButton
+						label="测距"
+						active={activeTool === 'measure-distance'}
+						onclick={() => handleDrawTool('measure-distance')}
+					>
+						<Ruler size={18} />
+					</ToolbarButton>
+					<ToolbarButton
+						label="测面积"
+						active={activeTool === 'measure-area'}
+						onclick={() => handleDrawTool('measure-area')}
+					>
+						<Scaling size={18} />
+					</ToolbarButton>
+				</div>
+			</div>
+		</div>
+	</ToolbarGroup>
+
 	<!-- 视图切换：单按钮 toggle + 地球切换 -->
 	<ToolbarGroup>
 		<ToolbarButton
@@ -54,15 +147,9 @@
 			onclick={toggleView}
 		>
 			{#if currentView === '2d'}
-				<!-- 2D 图标: 正方形 -->
-				<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+				<Square size={18} />
 			{:else}
-				<!-- 3D 图标: 立方体 -->
-				<svg viewBox="0 0 24 24">
-					<path d="M12 2L2 7l10 5 10-5-10-5z" />
-					<path d="M2 17l10 5 10-5" />
-					<path d="M2 12l10 5 10-5" />
-				</svg>
+				<Box size={18} />
 			{/if}
 		</ToolbarButton>
 		<ToolbarButton
@@ -70,103 +157,36 @@
 			active={projection === 'globe'}
 			onclick={toggleProjection}
 		>
-			<!-- 地球图标 -->
-			<svg viewBox="0 0 24 24">
-				<circle cx="12" cy="12" r="10" />
-				<path
-					d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
-				/>
-			</svg>
+			<Globe size={18} />
 		</ToolbarButton>
 	</ToolbarGroup>
 
-	<!-- 绘图工具 -->
+	<!-- 导航工具：缩放与指南针 -->
 	<ToolbarGroup>
-		<ToolbarButton
-			label="画点"
-			active={activeTool === 'draw-point'}
-			onclick={() => handleDrawTool('draw-point')}
-		>
-			<!-- 标记点图标 -->
-			<svg viewBox="0 0 24 24">
-				<path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
-				<circle cx="12" cy="9" r="2.5" />
+		<ToolbarButton label="放大" onclick={() => onzoomchange(1)}>
+			<Plus size={18} />
+		</ToolbarButton>
+		<ToolbarButton label="缩小" onclick={() => onzoomchange(-1)}>
+			<Minus size={18} />
+		</ToolbarButton>
+		<ToolbarButton label="指南针" onclick={onbearingreset}>
+			<!-- 指南针保留自定义 SVG：需要指针随 bearing 动态旋转 -->
+			<svg
+				viewBox="0 0 24 24"
+				style:transform="rotate({-bearing}deg)"
+				style:transition="transform 0.2s ease"
+			>
+				<path d="M12 2l4 9h-8l4-9z" fill="var(--ui-accent)" stroke="none" />
+				<path d="M12 22l-4-9h8l-4 9z" fill="var(--ui-text)" stroke="none" opacity="0.6" />
 			</svg>
 		</ToolbarButton>
-		<ToolbarButton
-			label="画线"
-			active={activeTool === 'draw-line'}
-			onclick={() => handleDrawTool('draw-line')}
-		>
-			<!-- 折线图标 -->
-			<svg viewBox="0 0 24 24">
-				<polyline points="4 20 10 10 16 14 20 4" />
-				<circle cx="4" cy="20" r="1.5" fill="currentColor" />
-				<circle cx="20" cy="4" r="1.5" fill="currentColor" />
-			</svg>
-		</ToolbarButton>
-		<ToolbarButton
-			label="画面"
-			active={activeTool === 'draw-polygon'}
-			onclick={() => handleDrawTool('draw-polygon')}
-		>
-			<!-- 多边形图标 -->
-			<svg viewBox="0 0 24 24">
-				<polygon points="12 3 20 9 18 18 6 18 4 9" />
-			</svg>
-		</ToolbarButton>
-	</ToolbarGroup>
-
-	<!-- 测量工具 -->
-	<ToolbarGroup>
-		<ToolbarButton
-			label="测距"
-			active={activeTool === 'measure-distance'}
-			onclick={() => handleDrawTool('measure-distance')}
-		>
-			<!-- 直尺图标 -->
-			<svg viewBox="0 0 24 24">
-				<path d="M3 5h18v14H3z" />
-				<path d="M7 5v4M11 5v6M15 5v4M19 5v4" />
-			</svg>
-		</ToolbarButton>
-		<ToolbarButton
-			label="测面积"
-			active={activeTool === 'measure-area'}
-			onclick={() => handleDrawTool('measure-area')}
-		>
-			<!-- 面积图标 -->
-			<svg viewBox="0 0 24 24">
-				<rect x="4" y="4" width="16" height="16" rx="1" stroke-dasharray="4 2" />
-				<path d="M4 4l16 16" opacity="0.4" />
-			</svg>
-		</ToolbarButton>
-	</ToolbarGroup>
-
-	<!-- 主题切换：hover 显示 -->
-	<ToolbarGroup>
-		<div class="hover-menu">
-			<ToolbarButton label="切换主题">
-				<!-- 调色板图标 -->
-				<svg viewBox="0 0 24 24">
-					<circle cx="12" cy="12" r="10" />
-					<circle cx="12" cy="8" r="1.5" fill="currentColor" stroke="none" />
-					<circle cx="8.5" cy="12" r="1.5" fill="currentColor" stroke="none" />
-					<circle cx="15.5" cy="12" r="1.5" fill="currentColor" stroke="none" />
-					<circle cx="12" cy="16" r="1.5" fill="currentColor" stroke="none" />
-				</svg>
-			</ToolbarButton>
-			<div class="hover-panel">
-				<ThemePanel {themes} current={currentTheme} onselect={onthemechange} />
-			</div>
-		</div>
 	</ToolbarGroup>
 </div>
 
 <style>
 	.map-toolbar {
 		position: absolute;
-		top: 20px;
+		top: 30px;
 		right: 20px;
 		z-index: 10;
 		display: flex;
@@ -189,12 +209,37 @@
 		display: none;
 		position: absolute;
 		right: 100%;
-		top: 50%;
-		transform: translateY(-50%);
-		padding: 4px 10px 4px 4px;
+		top: 0;
+		padding: 0 10px 0 0;
+		animation: fade-in 0.2s ease-out;
+		z-index: 100;
+	}
+
+	.vertical-panel {
+		background: var(--ui-surface);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--ui-border);
+		border-radius: 10px;
+		padding: 4px;
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 	}
 
 	.hover-menu:hover .hover-panel {
 		display: block;
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0;
+			transform: translateX(10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
 	}
 </style>
