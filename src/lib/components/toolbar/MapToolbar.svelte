@@ -171,14 +171,14 @@
 		z-index: 10;
 		display: flex;
 		flex-direction: column;
-		background: rgba(10, 15, 30, 0.85);
+		background: var(--ui-surface);
+		border: 1px solid var(--ui-border);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
 		border-radius: 12px;
 		padding: 4px;
-		box-shadow:
-			0 8px 32px rgba(0, 0, 0, 0.35),
-			0 0 0 1px rgba(255, 255, 255, 0.06);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+		transition: all 0.3s ease;
 	}
 
 	.hover-menu {

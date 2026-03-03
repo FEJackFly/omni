@@ -65,6 +65,13 @@
 	function handleProjectionChange(p: 'mercator' | 'globe') {
 		projection = p;
 	}
+
+	/** 同步主题到全局 HTML 属性 */
+	$effect(() => {
+		if (typeof document !== 'undefined') {
+			document.documentElement.dataset.theme = currentThemeKey;
+		}
+	});
 </script>
 
 <div class="map-container">

@@ -26,9 +26,10 @@
 
 <style>
 	.theme-panel {
-		background: rgba(10, 15, 30, 0.92);
+		background: var(--ui-surface);
 		backdrop-filter: blur(12px);
 		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--ui-border);
 		border-radius: 10px;
 		padding: 6px;
 		display: flex;
@@ -46,7 +47,7 @@
 		border: none;
 		border-radius: 6px;
 		background: transparent;
-		color: rgba(255, 255, 255, 0.7);
+		color: var(--ui-text);
 		font-size: 12px;
 		cursor: pointer;
 		transition: all 0.15s ease;
@@ -56,12 +57,16 @@
 
 	.theme-item:hover {
 		background: rgba(255, 255, 255, 0.08);
-		color: #fff;
+		color: var(--ui-text-hover);
+	}
+
+	[data-theme='Light'] .theme-item:hover {
+		background: rgba(0, 0, 0, 0.05);
 	}
 
 	.theme-item.active {
-		background: rgba(24, 144, 255, 0.15);
-		color: #1890ff;
+		background: var(--ui-active-bg);
+		color: var(--ui-accent);
 	}
 
 	.color-dot {

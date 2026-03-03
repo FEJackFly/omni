@@ -25,7 +25,7 @@
 		border: none;
 		border-radius: 8px;
 		background: transparent;
-		color: rgba(255, 255, 255, 0.55);
+		color: var(--ui-text);
 		cursor: pointer;
 		transition: all 0.2s ease;
 		outline: none;
@@ -44,11 +44,15 @@
 
 	.toolbar-btn:hover {
 		background: rgba(255, 255, 255, 0.08);
-		color: rgba(255, 255, 255, 0.9);
+		color: var(--ui-text-hover);
+	}
+
+	[data-theme='Light'] .toolbar-btn:hover {
+		background: rgba(0, 0, 0, 0.05);
 	}
 
 	.toolbar-btn.active {
-		background: rgba(24, 144, 255, 0.12);
-		color: #1890ff;
+		background: var(--ui-active-bg);
+		color: var(--ui-accent);
 	}
 </style>

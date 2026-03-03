@@ -1,1 +1,50 @@
 @import 'tailwindcss';
+
+:root {
+	/* 默认皮肤: Blue */
+	--ui-bg: #001529;
+	--ui-surface: rgba(10, 15, 30, 0.85);
+	--ui-border: rgba(255, 255, 255, 0.06);
+	--ui-text: rgba(255, 255, 255, 0.55);
+	--ui-text-hover: rgba(255, 255, 255, 0.9);
+	--ui-accent: #1890ff;
+	--ui-active-bg: rgba(24, 144, 255, 0.12);
+}
+
+[data-theme='Dark'] {
+	--ui-bg: #1a1a2e;
+	--ui-surface: rgba(26, 26, 46, 0.9);
+	--ui-border: rgba(255, 255, 255, 0.1);
+	--ui-text: rgba(255, 255, 255, 0.5);
+	--ui-text-hover: rgba(255, 255, 255, 0.85);
+	--ui-accent: #5a5a8a;
+	--ui-active-bg: rgba(90, 90, 138, 0.15);
+}
+
+[data-theme='Light'] {
+	--ui-bg: #f0e6d3;
+	--ui-surface: rgba(240, 230, 211, 0.85);
+	--ui-border: rgba(0, 0, 0, 0.1);
+	--ui-text: rgba(0, 0, 0, 0.55);
+	--ui-text-hover: rgba(0, 0, 0, 0.9);
+	--ui-accent: #4a4a4a;
+	--ui-active-bg: rgba(74, 74, 74, 0.1);
+}
+
+[data-theme='Satellite'] {
+	--ui-bg: #050510;
+	--ui-surface: rgba(5, 5, 16, 0.88);
+	--ui-border: rgba(255, 255, 255, 0.08);
+	--ui-text: rgba(255, 255, 255, 0.65);
+	--ui-text-hover: #ffffff;
+	--ui-accent: #ffcc00;
+	--ui-active-bg: rgba(255, 204, 0, 0.12);
+}
+
+body {
+	background-color: var(--ui-bg);
+	color: var(--ui-text);
+	transition:
+		background-color 0.3s ease,
+		color 0.3s ease;
+}
