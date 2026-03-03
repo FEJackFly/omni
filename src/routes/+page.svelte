@@ -5,6 +5,7 @@
 	import { ArcLayer } from 'deck.gl';
 	import type { StyleSpecification } from 'maplibre-gl';
 	import { buildMapStyle, THEME_NAMES } from '$lib/map';
+	import MapToolbar from '$lib/components/toolbar/MapToolbar.svelte';
 
 	const NUM = 30;
 	let data: { source: [number, number]; target: [number, number] }[] = $state([]);
@@ -27,7 +28,13 @@
 		return () => cancelAnimationFrame(handle);
 	});
 
-	const CENTER: [number, number] = [139.7672, 35.6812];
+	let mapState = $state({
+		zoom: 15,
+		pitch: 0,
+		bearing: -45,
+		center: [139.7672, 35.6812] as [number, number],
+		maxPitch: 80
+	});
 
 	/** 可选主题：动态构建 + Satellite（独立 JSON） */
 	const ALL_THEMES = [...THEME_NAMES, 'Satellite'];
@@ -39,26 +46,30 @@
 	let currentStyle: StyleSpecification | string = $derived(
 		currentThemeKey === 'Satellite' ? SATELLITE_STYLE_URL : buildMapStyle(currentThemeKey)
 	);
+
+	let currentView = $state<'2d' | '3d'>('2d');
+
+	/** 视图切换回调 */
+	function handleViewChange(view: '2d' | '3d') {
+		currentView = view;
+		mapState.pitch = view === '3d' ? 60 : 0;
+	}
+
+	/** 主题切换回调 */
+	function handleThemeChange(theme: string) {
+		currentThemeKey = theme;
+	}
 </script>
 
 <div class="map-container">
-	<div class="theme-selector">
-		<label for="theme-select">选择主题：</label>
-		<select id="theme-select" bind:value={currentThemeKey}>
-			{#each ALL_THEMES as key}
-				<option value={key}>{key}</option>
-			{/each}
-		</select>
-	</div>
-	<MapLibre
-		class="map"
-		style={currentStyle}
-		zoom={15}
-		pitch={0}
-		bearing={-45}
-		center={CENTER}
-		maxPitch={80}
-	>
+	<MapToolbar
+		themes={ALL_THEMES}
+		currentTheme={currentThemeKey}
+		{currentView}
+		onthemechange={handleThemeChange}
+		onviewchange={handleViewChange}
+	/>
+	<MapLibre class="map" style={currentStyle} {...mapState}>
 		<GlobeControl />
 		<Projection />
 
@@ -89,29 +100,5 @@
 	.map-container :global(.map) {
 		width: 100%;
 		height: 100%;
-	}
-
-	.theme-selector {
-		position: absolute;
-		top: 20px;
-		left: 20px;
-		z-index: 10;
-		background: rgba(255, 255, 255, 0.9);
-		padding: 10px 16px;
-		border-radius: 8px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		font-family: sans-serif;
-		backdrop-filter: blur(4px);
-	}
-
-	.theme-selector select {
-		padding: 6px;
-		border-radius: 4px;
-		border: 1px solid #ddd;
-		outline: none;
-		cursor: pointer;
 	}
 </style>
