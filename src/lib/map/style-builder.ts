@@ -30,7 +30,7 @@ export function buildMapStyle(themeName: string): StyleSpecification {
 		throw new Error(`未知主题: "${themeName}"。可用主题: ${Object.keys(THEMES).join(', ')}`);
 	}
 
-	const style: StyleSpecification = {
+	const style: Record<string, unknown> = {
 		version: 8,
 		name: tokens.name,
 		metadata: { description: tokens.description },
@@ -45,7 +45,7 @@ export function buildMapStyle(themeName: string): StyleSpecification {
 
 	// 部分主题含 sky 配置
 	if (tokens.sky) {
-		(style as Record<string, unknown>).sky = {
+		style.sky = {
 			'sky-color': tokens.sky.skyColor,
 			'horizon-color': tokens.sky.horizonColor,
 			'fog-color': tokens.sky.fogColor,
@@ -56,5 +56,5 @@ export function buildMapStyle(themeName: string): StyleSpecification {
 		};
 	}
 
-	return style;
+	return style as StyleSpecification;
 }

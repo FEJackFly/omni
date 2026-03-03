@@ -140,7 +140,17 @@ const blue: ThemeTokens = {
 	textPrimary: '#40a9ff',
 	textSecondary: '#69c0ff',
 	textTertiary: '#b5e3ff',
-	textHalo: '#001529'
+	textHalo: '#001529',
+
+	sky: {
+		skyColor: '#001529',
+		horizonColor: '#0a4a8a',
+		fogColor: '#001529',
+		fogGroundBlend: 0.3,
+		horizonFogBlend: 0.5,
+		skyHorizonBlend: 0.4,
+		atmosphereBlend: 1
+	}
 };
 
 const dark: ThemeTokens = {
