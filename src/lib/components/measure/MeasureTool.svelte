@@ -109,7 +109,7 @@
 				source: SOURCE_ID,
 				filter: ['==', '$type', 'Polygon'],
 				paint: {
-					'fill-color': '#00d4aa',
+					'fill-color': '#f97316',
 					'fill-opacity': 0.15
 				}
 			});
@@ -121,7 +121,7 @@
 				source: SOURCE_ID,
 				filter: ['==', '$type', 'LineString'],
 				paint: {
-					'line-color': '#00d4aa',
+					'line-color': '#f97316',
 					'line-width': 2.5
 				}
 			});
@@ -132,7 +132,7 @@
 				type: 'line',
 				source: PREVIEW_SOURCE_ID,
 				paint: {
-					'line-color': '#00d4aa',
+					'line-color': '#f97316',
 					'line-width': 1.5,
 					'line-dasharray': [4, 4]
 				}
@@ -147,7 +147,7 @@
 				paint: {
 					'circle-radius': 5,
 					'circle-color': '#ffffff',
-					'circle-stroke-color': '#00d4aa',
+					'circle-stroke-color': '#f97316',
 					'circle-stroke-width': 2
 				}
 			});
@@ -386,10 +386,10 @@
 		background: var(--ui-surface, rgba(10, 18, 36, 0.9));
 		backdrop-filter: blur(8px);
 		-webkit-backdrop-filter: blur(8px);
-		border: 1px solid var(--ui-border, rgba(255, 255, 255, 0.08));
+		border: 1px solid rgba(249, 115, 22, 0.4);
 		border-radius: 6px;
 		padding: 6px 12px;
-		color: var(--ui-text, #ffffff);
+		color: #ffffff;
 		font-family: 'Inter', system-ui, sans-serif;
 		font-size: 13px;
 		font-weight: 600;

@@ -29,6 +29,7 @@
 		onzoomchange: (delta: number) => void;
 		onbearingreset: () => void;
 		onmeasure: (mode: 'distance' | 'area' | null) => void;
+		ondraw: (mode: 'point' | 'line' | 'polygon' | null) => void;
 	}
 
 	let {
@@ -42,7 +43,8 @@
 		onprojectionchange,
 		onzoomchange,
 		onbearingreset,
-		onmeasure
+		onmeasure,
+		ondraw
 	}: Props = $props();
 
 	/** 当前激活的绘图/测量工具 */
@@ -66,13 +68,27 @@
 	function handleDrawTool(tool: DrawTool) {
 		activeTool = activeTool === tool ? null : tool;
 
-		// 同步测量模式至父组件
+		// 同步测量模式
 		if (activeTool === 'measure-distance') {
 			onmeasure('distance');
+			ondraw(null);
 		} else if (activeTool === 'measure-area') {
 			onmeasure('area');
+			ondraw(null);
+		}
+		// 同步绘图模式
+		else if (activeTool === 'draw-point') {
+			ondraw('point');
+			onmeasure(null);
+		} else if (activeTool === 'draw-line') {
+			ondraw('line');
+			onmeasure(null);
+		} else if (activeTool === 'draw-polygon') {
+			ondraw('polygon');
+			onmeasure(null);
 		} else {
 			onmeasure(null);
+			ondraw(null);
 		}
 	}
 </script>

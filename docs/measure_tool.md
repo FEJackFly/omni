@@ -9,6 +9,17 @@
 
 ## 2. 核心文件结构
 
+```mermaid
+graph TD
+    Input((用户鼠标)) -->|点集捕获| UI[MeasureTool.svelte]
+    UI -->|提取坐标| Util[measure.svelte.ts]
+    Util -->|Turf.js| CalLength[距离累加测算]
+    Util -->|Turf.js| CalArea[面域测算 & 重心]
+    CalLength --> UI
+    CalArea --> UI
+    UI -->|弹出层定位 & 图形渲染| MapLibre[交互映射]
+```
+
 - `src/lib/components/measure/MeasureTool.svelte`: UI 组件，负责地图交互事件监听、图层渲染管理和 Svelte 5 响应式逻辑。
 - `src/lib/components/measure/measure.svelte.ts`: 工具函数库，包含经纬度格式化、GeoJSON 构建、距离/面积换算以及几何中心计算算法。
 

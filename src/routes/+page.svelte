@@ -7,6 +7,7 @@
 	import { buildMapStyle, THEME_NAMES } from '$lib/map';
 	import MapToolbar from '$lib/components/toolbar/MapToolbar.svelte';
 	import MeasureTool from '$lib/components/measure/MeasureTool.svelte';
+	import DrawTool from '$lib/components/draw/DrawTool.svelte';
 
 	const NUM = 30;
 	let data: { source: [number, number]; target: [number, number] }[] = $state([]);
@@ -53,6 +54,7 @@
 	let map: MapLibreInstance | undefined = $state();
 	let mousePos = $state<{ lng: number; lat: number } | null>(null);
 	let activeMeasure = $state<'distance' | 'area' | null>(null);
+	let activeDraw = $state<'point' | 'line' | 'polygon' | null>(null);
 
 	/** 视图切换回调 */
 	function handleViewChange(view: '2d' | '3d') {
@@ -103,8 +105,18 @@
 	/** 测量模式切换回调 */
 	function handleMeasure(mode: 'distance' | 'area' | null) {
 		activeMeasure = mode;
-		// 测量时自动切换到 2D 视图，避免 3D 下坐标不准
 		if (mode) {
+			activeDraw = null; // 互斥
+			currentView = '2d';
+			mapState.pitch = 0;
+		}
+	}
+
+	/** 绘图模式切换回调 */
+	function handleDraw(mode: 'point' | 'line' | 'polygon' | null) {
+		activeDraw = mode;
+		if (mode) {
+			activeMeasure = null; // 互斥
 			currentView = '2d';
 			mapState.pitch = 0;
 		}
@@ -136,10 +148,12 @@
 			onzoomchange={handleZoomChange}
 			onbearingreset={handleBearingReset}
 			onmeasure={handleMeasure}
+			ondraw={handleDraw}
 		/>
 		<Projection type={projection} />
 		<ScaleControl position="bottom-left" unit="metric" />
 		<MeasureTool {map} mode={activeMeasure} />
+		<DrawTool {map} mode={activeDraw} />
 
 		<DeckGLOverlay
 			interleaved

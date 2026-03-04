@@ -1,83 +1,50 @@
-# 地图主题样式系统设计文档
+# 地图主题样式系统 开发维护文档
 
-## 1. 系统背景
+## 1. 系统概述
 
-在重构之前，项目中存在 `blue.json`、`dark.json`、`light.json` 三个独立的地图样式文件。由于地图图层结构（Layers）高度一致（约 500+ 行），仅在颜色（Paint 属性）上有所差异，导致了严重的冗余。
+在重构之前，项目中存在 `blue.json`、`dark.json`、`light.json` 三个独立的地图样式文件。由于地图图层结构（Layers）高度一致（约 500+ 行代码），仅在颜色（Paint 属性）上有所差异，产生严重的重复。
+本地图主题样式系统旨在通过 **"Token + 模板"** 的现代化架构，实现系统代码结构上的纯状态逻辑与视觉配色方案剥离，使得全局主题呈现统一并提供高扩展性。
 
-本系统旨在通过 **"Token + 模板"** 的架构，实现样式逻辑与配色方案的分离，提升可维护性和扩展性。
+## 2. 核心架构结构
 
-## 2. 核心架构
-
-系统采用「模块化组装」思路：
-
-### 架构示意图 (Mermaid)
+主题样式组装基于多重逻辑层级：
 
 ```mermaid
 graph LR
-    Tokens[theme-tokens.ts] --> Builder[style-builder.ts]
-    Layers[base-layers.ts] --> Builder
-    Builder --> FinalStyle[MapLibre StyleSpec]
+    Tokens[theme-tokens.ts] -.->|语义颜色槽| Builder[style-builder.ts]
+    Layers[base-layers.ts] -.->|底层结构模板| Builder
+    Builder -->|工厂函数拼装| Output[MapLibre StyleSpec]
 ```
 
-### 逻辑层级说明
+- `src/lib/map/theme-tokens.ts`: **输入层**，定义配色语义化 Token 接口约束及包含所有的各个配色主题静态变量体。
+- `src/lib/map/base-layers.ts`: **模板公共层**，维护整个规范图层结构中稳定存在的要素如 zoom、filter、通用表现层基础规则，仅为颜色值插槽提供空位。
+- `src/lib/map/style-builder.ts`: **处理构建器层**，对外导出生成工厂函数，接收主题模式命令并将 Tokens 融合入层。
 
-| 层级       | 模块文件             | 核心职责                                     |
-| :--------- | :------------------- | :------------------------------------------- |
-| **输入层** | `theme-tokens.ts`    | 定义配色语义化 Token (如: background, water) |
-| **模板层** | `base-layers.ts`     | 维护公共图层结构 (如: zoom, filter)          |
-| **处理层** | `style-builder.ts`   | 执行 `buildMapStyle` 将以上两者合并          |
-| **结果层** | **Map Style Object** | 最终输出给 MapLibre 的样式规范               |
+## 3. 技术实现要点
 
-### 2.1 配色 Token (`theme-tokens.ts`)
+### 3.1 配色语义 Token 设计 (`theme-tokens.ts`)
 
-- **作用**：定义地图颜色的语义化变量（如 `background`, `water`, `roadPrimary` 等）。
-- **实现**：使用 TypeScript Interface 约束，确保每个主题都包含必要的配色字段。
-- **配置**：现有的 `Blue`、`Dark`、`Light` 主题即在此处定义配色方案。
+- 抽象设计基础环境色彩（如 `background`, `water`, `roadPrimary` 等）。
+- 使用 TypeScript 原生 Interface 严格对齐数据维度，使增加新风格只需求配对颜色，编译器即可发现漏填的情况。
 
-### 2.2 图层模板 (`base-layers.ts`)
+### 3.2 图层公共模板 (`base-layers.ts`)
 
-- **作用**：定义地图的所有可视化层。
-- **特点**：
-  - 结构固定：filter、layout、minzoom、插值算法等只在这里维护一次。
-  - 动态填空：所有的 `paint.color` 均从配置好的 Token 中读取。
-  - 现代语法：统一采用 `coalesce` 跨语言显示逻辑，减少重复图层。
+- **结构防冗余**: 诸如插值算法、条件过滤器 (`filter`)与渲染排列 (`layout`) 等一千行级别的公共控制只在这里维护一份。
+- **现代化提取**: 利用 `coalesce` 跨界跨库适配逻辑进行兼容表达式化调优，合并和减少图层生成数量。所有的 `paint.color` 配置均为动态通过引用的传入注入。
 
-### 2.3 样式构建器 (`style-builder.ts`)
+### 3.3 构建与输出流 (`style-builder.ts`)
 
-- **作用**：主入口函数 `buildMapStyle(themeName)`。
-- **逻辑**：
-  1. 根据主题名获取对应 Token。
-  2. 生成图层数组。
-  3. 组装顶层属性（sprite, sources, sky等）。
-  4. 返回可直接被 MapLibre 消费的对象。
+作为 `buildMapStyle(themeName)` 指令的归口函数，它会依据所需主题去取回对应 Token，与模板数据动态交织、整合包含 `sprite`, `sources`, `sky` 等必要的顶层节点规范，实时下发被 MapLibre 完全无缝解析运行。
 
-## 3. 核心优势
+## 4. 主题扩展与自定义说明
 
-- **DRY (Don't Repeat Yourself)**：图层结构只维护一份，不再需要在多个 JSON 间同步修改。
-- **扩展性强**：新增主题只需定义一组约 50 行的颜色数组，无需复制 500+ 行 JSON。
-- **配置化**：可在运行时动态切换主题（Svelte 状态驱动），无需发起 HTTP 请求获取 JSON。
-- **类型安全**：借助 TypeScript，拼写错误或缺失颜色字段会在编译阶段被拦截。
+得益于该框架的设计范式，目前若需要增加甚至用户端动态下发配色系统：
 
-## 4. 如何新增主题
+1. 打开 `src/lib/map/theme-tokens.ts` 定义一个新的 `ThemeTokens` （如：护眼主题）。
+2. 在 `THEMES` 记录簿对象内添加这唯一的对应对象结构。
+3. 直接通过前端 Svelte 状态变更发起 UI 指令让其自动调用，全系统热重载而无需多余 HTTP 解析负荷。
 
-1.  打开 `src/lib/map/theme-tokens.ts`。
-2.  定义一个新的 `ThemeTokens` 对象。
-3.  在 `THEMES` 注册表中添加新主题键。
+## 5. 注意事项
 
-```typescript
-const MyNewTheme: ThemeTokens = {
-    name: "新主题",
-    background: "#ff0000",
-    // ... 其他配色
-};
-
-export const THEMES = {
-    // ...
-    MyNewTheme
-};
-```
-
-## 5. 常见问题记录
-
-- **Sky 不显示**：`StyleSpecification` 类型在某些环境下可能会过滤掉非标准字段。现在通过构造 `Record<string, unknown>` 对象并最终转型的方式，确保 `sky` 属性在构建过程中被正确保留。
-- **Satellite 主题**：卫星图涉及 raster 分片和不同的 source 结构，不建议强行归纳。目前保留独立 JSON 加载方式。
+- **Sky 对象兼容丢弃风险**：某些编译引擎可能会将非标准的属性如 `sky` 从 `StyleSpecification` 推导内剔除，目前通过转换为 `Record<string, unknown>` 联合体断言的形式进行绕过支持。
+- **Satellite 特例兼容**：该设计用于底图抽象扁平化渲染。针对带 Raster 栅格分片的真实卫星影像由于其底层 Source 源结构完全异构，不建议强行挂树封装统一配置。针对卫星版结构仍须预留独立原生 JSON 的引入空间。
