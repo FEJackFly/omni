@@ -38,16 +38,21 @@
 		maxPitch: 80
 	});
 
-	/** 可选主题：动态构建 + Satellite（独立 JSON） */
-	const ALL_THEMES = [...THEME_NAMES, 'Satellite'];
+	/** 可选主题：动态构建 + Satellite（独立 JSON） + Blank（空白离线） */
+	const ALL_THEMES = [...THEME_NAMES, 'Satellite', 'Blank'];
 	const SATELLITE_STYLE_URL = '/map_styles/satellite.json';
+	const BLANK_STYLE: StyleSpecification = { version: 8, sources: {}, layers: [] };
 
 	let currentThemeKey = $state('Blue');
 	let projection = $state<'mercator' | 'globe'>('mercator');
 
-	/** Blue/Dark/Light 由构建器生成对象，Satellite 走 JSON URL */
+	/** Blue/Dark/Light 由构建器生成对象，Satellite 走 JSON URL, Blank 为空底图 */
 	let currentStyle: StyleSpecification | string = $derived(
-		currentThemeKey === 'Satellite' ? SATELLITE_STYLE_URL : buildMapStyle(currentThemeKey)
+		currentThemeKey === 'Blank'
+			? BLANK_STYLE
+			: currentThemeKey === 'Satellite'
+				? SATELLITE_STYLE_URL
+				: buildMapStyle(currentThemeKey)
 	);
 
 	let currentView = $state<'2d' | '3d'>('2d');
